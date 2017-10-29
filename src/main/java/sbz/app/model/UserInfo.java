@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Entity
 public class UserInfo {
 	
-	@GeneratedValue
+	
 	@Id
 	@Column(name="id")
 	private String id;
