@@ -1,6 +1,6 @@
 package sbz.app.controller;
-import sbz.app.model.User;
-import sbz.app.repository.UserRepository;
+import sbz.app.model.Korisnik;
+import sbz.app.repository.KorisnikRepository;
 
 import java.util.List;
 
@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/user")
-public class UserController {
+public class KorisnikController {
 	@Autowired
-	UserRepository rep;
+	KorisnikRepository rep;
 	
 	@RequestMapping("/all")
 	@ResponseBody
-	public List<User> getAll(){
+	public List<Korisnik> getAll(){
 		
 		return rep.findAll();
 		
@@ -28,7 +28,7 @@ public class UserController {
 	
 	
 	@RequestMapping(value="/create", method=RequestMethod.POST)
-	public boolean create(@RequestBody final User user){
+	public boolean create(@RequestBody final Korisnik user){
 		rep.save(user);
 		return true;
 		

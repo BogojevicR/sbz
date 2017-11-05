@@ -3,9 +3,11 @@ package sbz.app.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,43 +19,42 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name="User")
-public class User implements Serializable{
-	public enum Role {CUSTOMER, MANAGER, EMPLOYEE };
+public class Korisnik implements Serializable{
+	public enum Role {KUPAC, MENADZER, PRODAVAC };
 	@Id
 	@Column(name="username")
 	private String username;
-	@Column(name="first_name")
-	private String first_name;
-	@Column(name="last_name")
-	private String last_name;
+	@Column(name="ime")
+	private String ime;
+	@Column(name="prezime")
+	private String prezime;
 	@Column(name="password")
 	private String password;
 	@Enumerated
-	@Column(name="role")
-	private Role role;
-	@Column(name="registration_date")
-	private Date registration_date;
+	@Column(name="uloga")
+	private Role uloga;
+	@Column(name="datum_registrovanja")
+	private Date datum_registrovanja;
 	
 	@OneToOne
-	private UserInfo user_info;
+	private ProfilKupca profil_kupca;
 	
 	
-	public User(){
+	public Korisnik(){
 		super();
 	}
 	
 	
-	public User(String username, String first_name, String last_name, String password, Role role,
-			Date registration_date, UserInfo user_info) {
+	public Korisnik(String username, String first_name, String last_name, String password, Role role,
+			Date registration_date, ProfilKupca user_info) {
 		super();
 		this.username = username;
-		this.first_name = first_name;
-		this.last_name = last_name;
+		this.ime = first_name;
+		this.prezime = last_name;
 		this.password = password;
-		this.role = role;
-		this.registration_date = registration_date;
-		this.user_info = user_info;
+		this.uloga = role;
+		this.datum_registrovanja = registration_date;
+		this.profil_kupca = user_info;
 	}
 
 
@@ -68,22 +69,22 @@ public class User implements Serializable{
 
 
 	public String getFirst_name() {
-		return first_name;
+		return ime;
 	}
 
 
 	public void setFirst_name(String first_name) {
-		this.first_name = first_name;
+		this.ime = first_name;
 	}
 
 
 	public String getLast_name() {
-		return last_name;
+		return prezime;
 	}
 
 
 	public void setLast_name(String last_name) {
-		this.last_name = last_name;
+		this.prezime = last_name;
 	}
 
 
@@ -98,32 +99,32 @@ public class User implements Serializable{
 
 
 	public Role getRole() {
-		return role;
+		return uloga;
 	}
 
 
 	public void setRole(Role role) {
-		this.role = role;
+		this.uloga = role;
 	}
 
 
 	public Date getRegistration_date() {
-		return registration_date;
+		return datum_registrovanja;
 	}
 
 
 	public void setRegistration_date(Date registration_date) {
-		this.registration_date = registration_date;
+		this.datum_registrovanja = registration_date;
 	}
 
 
-	public UserInfo getUser_info() {
-		return user_info;
+	public ProfilKupca getUser_info() {
+		return profil_kupca;
 	}
 
 
-	public void setUser_info(UserInfo user_info) {
-		this.user_info = user_info;
+	public void setUser_info(ProfilKupca user_info) {
+		this.profil_kupca = user_info;
 	}
 	
 	
