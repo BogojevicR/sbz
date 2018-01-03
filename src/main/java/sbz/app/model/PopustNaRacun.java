@@ -70,6 +70,13 @@ public class PopustNaRacun {
 	public void setVrstaPopusta(VrstaPopusta vrstaPopusta) {
 		this.vrstaPopusta = vrstaPopusta;
 	}
+
+
+	@Override
+	public String toString() {
+		return "PopustNaRacun [sifra=" + sifra + ", racun=" + racun + ", procenatUmanjenja=" + procenatUmanjenja
+				+ ", vrstaPopusta=" + vrstaPopusta + "]";
+	}
 	
 	
 }

@@ -88,6 +88,15 @@ public class KategorijaArtikla {
 	public void setMaksimalni_popust(float maksimalni_popust) {
 		this.maksimalni_popust = maksimalni_popust;
 	}
+
+
+
+
+	@Override
+	public String toString() {
+		return "KategorijaArtikla [sifra=" + sifra + ", naziv=" + naziv + ", nadkategorija=" + nadkategorija
+				+ ", maksimalni_popust=" + maksimalni_popust + "]";
+	}
 	
 	
 	

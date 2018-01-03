@@ -149,6 +149,17 @@ public class Racun {
 	public void setListaStavki(List<StavkaRacuna> listaStavki) {
 		this.listaStavki = listaStavki;
 	}
+
+	@Override
+	public String toString() {
+		return "Racun [sifra=" + sifra + ", datum=" + datum + ", kupac=" + kupac + ", stanje=" + stanje
+				+ ", originalnaCena=" + originalnaCena + ", procenatUmanjenja=" + procenatUmanjenja + ", konacnaCena="
+				+ konacnaCena + ", brojPotrosenihBodova=" + brojPotrosenihBodova + ", brojOstvarenihBodova="
+				+ brojOstvarenihBodova + ", listaPopusta=" + listaPopusta + ", listaStavki=" + listaStavki + "]";
+	}
+	
+	
+	
 	
 	//TODO 2: Popravi relacije u bazi
 	

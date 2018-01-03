@@ -1,6 +1,9 @@
 package sbz.app.model;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -213,6 +216,25 @@ public enum StatusZapisa {AKTIVAN, ARHIVIRAN}
 
 	public void setMinimalno_stanje(int minimalno_stanje) {
 		this.minimalno_stanje = minimalno_stanje;
+	}
+
+
+	public void podesi(Artikal art){		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		//dateFormat.format(date);
+		
+		art.setDatum_kreiranja(date);
+		art.setStatus_zapisa(StatusZapisa.AKTIVAN);
+	}
+
+
+
+	@Override
+	public String toString() {
+		return "Artikal [sifra=" + sifra + ", naziv=" + naziv + ", kategorija=" + kategorija + ", cena=" + cena
+				+ ", brojnoStanje=" + brojnoStanje + ", datum_kreiranja=" + datum_kreiranja + ", treba_zaliha="
+				+ treba_zaliha + ", status_zapisa=" + status_zapisa + ", minimalno_stanje=" + minimalno_stanje + "]";
 	}
 	
 	

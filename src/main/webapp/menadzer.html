@@ -1,0 +1,225 @@
+<div>
+ 
+ <h2 align="center">Kategorije Kupaca:</h2>
+ 
+ <table align="center" style="max-width: 500px" border = 1 ng-repeat="kategorija in kategorije_kupca track by $index">
+	<tr >
+		<td style="width: 80%;" align="center" >
+			{{ kategorija.ime_kategorije }}
+		</td>
+		<td>
+			<button class="btn btn-primary" ng-click="azurirajKategoriju_kupca(kategorija.ime_kategorije)">Azuriraj</button>
+		</td>
+	</tr>
+</table>
+
+
+<div class="modal fade" id="addWindow">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div align="right" class="modal-header">
+					<buttontype="button" class="close" id="btnclose"  data-dismiss="modal">&times;</button>
+				</div>
+				<div class="modal-body">
+					<form role="form">
+						<div class="form-group">
+							<input type="text" ng-model="naziv" class="form-control" placeholder="Naziv Kategorije" required = "required">
+							<div class="selectContainer" >
+				        		<select class="form-control sirina" ng-model="kategArt"   ng-options="x.naziv for x in kategorije_artikla">
+ 								</select>
+				        	</div>
+							<input type="number" ng-model="popust" class="form-control" placeholder="Maksimalni Popust" required = "required">
+							<div class="modal-footer">
+							<input type="submit" ng-click="dodajKategorijuArtikla(naziv,kategArt,popust)" class="btn btn-primary btn-block" value="Dodaj"  >
+							</div>
+						</div>
+				</div>
+				</form>
+
+			</div>
+		</div>
+</div>
+	
+
+
+
+
+ 
+  <h2 align="center">Kategorije Artikala:</h2>
+   <table align="center" style="max-width: 500px" border = 1 ng-repeat="kategorijaA in kategorije_artikla track by $index">
+	<tr >
+		<td style="width: 80%;" align="center" >
+			{{ kategorijaA.naziv }}
+		</td>
+		<td>
+			<button class="btn btn-primary" ng-click="azurirajKategoriju_artikla(kategorijaA.sifra)">Azuriraj</button>
+		</td>
+	</tr>
+</table>
+
+<div align="center">
+	<br>
+	<button  id="btnaddWindow" type="submit" class="btn btn-primary " data-toggle="modal" data-target="#addWindow"> Dodaj Kategoriju Artikla</button>
+	<br>
+</div>
+ 
+ <div class="modal fade" id="artiaklWindow">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div align="right" class="modal-header">
+					<buttontype="button" class="close" id="artikalclose"  data-dismiss="modal">&times;</button>
+				</div>
+				<div class="modal-body">
+					<form role="form">
+						<div class="form-group">
+							<input type="text" ng-model="nazivA" class="form-control" placeholder="Naziv Artikla" required = "required">
+							<div class="selectContainer" >
+				        		<select class="form-control sirina" ng-model="kateg"   ng-options="x.naziv for x in kategorije_artikla">
+ 								</select>
+				        	</div>
+							<input type="number" ng-model="cenaA" class="form-control" placeholder="Cena" required = "required">
+							<input type="number" ng-model="stanjeA" class="form-control" placeholder="Brojno Stanje" required = "required">
+							<input type="number" ng-model="minimumA" class="form-control" placeholder="Minimalno Stanje" required = "required">
+							<div class="modal-footer">
+							<input type="submit" ng-click="dodajArtikal(nazivA,cenaA,kateg,stanjeA,minimumA)" class="btn btn-primary btn-block" value="Dodaj"  >
+							</div>
+						</div>
+				</div>
+				</form>
+
+			</div>
+		</div>
+</div>
+ 
+ 
+ <h2 align="center">Lista Artikala:</h2>
+  
+ <table id="tabelaArtikla" align="center"  style="width: 70%;" border = 1 >
+	<thead >
+		<tr align="center">
+	      <th  >Naziv</th>
+	      <th >Kategorija</th>
+	      <th >Cena</th>
+	      <th >Brojno Stanje</th>
+	      <th>Datum</th>
+	      <th>Trebovanje</th>
+	      <th>Status Zapisa</th>
+	      <th>Minimalno</th>
+		</tr>
+  	</thead>
+  	<tbody>
+		<tr align="center" ng-repeat="artikal in lista_artikala track by $index">
+			<td style="width: 80%;" align="center" >
+				{{ artikal.naziv }}
+			</td>
+			<td style="width: 80%;" align="center" >
+				{{ artikal.kategorija.naziv }}
+			</td>
+			<td style="width: 80%;" align="center" >
+				{{ artikal.cena }}
+			</td>
+			<td style="width: 80%;" align="center" >
+				{{ artikal.brojnoStanje }}
+			</td>
+			<td  style="width: 100%;" align="center" >
+				{{ artikal.datum_kreiranja }}
+			</td>
+			<td style="width: 80%;" align="center" >
+				{{ artikal.treba_zaliha }}
+			</td>
+			<td style="width: 80%;" align="center" >
+				{{ artikal.status_zapisa }}
+			</td>
+			<td style="width: 80%;" align="center" >
+				{{ artikal.minimalno_stanje }}
+			</td>
+		</tr>
+	</tbody>
+</table>
+ <div align="center">
+	 <br>
+	 <button  id="btnaddArtikal" type="submit" class="btn btn-primary " data-toggle="modal" data-target="#artiaklWindow"> Dodaj Artikal</button>
+	 <br>
+ </div>
+ 
+ <div class="modal fade" id="dogadjajWindow">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div align="right" class="modal-header">
+					<buttontype="button" class="close" id="dogadjajclose"  data-dismiss="modal">&times;</button>
+				</div>
+				<div class="modal-body">
+					<form role="form">
+						<div class="form-group">
+							<input type="text" ng-model="nazivDog" class="form-control" placeholder="Naziv Dogadjaja" required = "required">					    
+						    <select  ng-options="x.naziv for x in lista_kategorija" ng-model="multipleSelect"  multiple></select>
+							<input type="number" ng-model="procenatDog" class="form-control" placeholder="Procenat Popusta" required = "required">
+							Pocetak:<input ng-init="setDate()"  type="date" id="datefield" min="2017-12-12" ng-model="pocetakDog"    class="form-control" >
+							Kraj:<input  type="date" ng-model="krajDog" id="datefield1"  class="form-control" >
+							<div class="modal-footer">
+							<input type="submit" ng-click="dodajDogadjaj(nazivDog,multipleSelect,procenatDog,pocetakDog,krajDog)" class="btn btn-primary btn-block" value="Dodaj"  >
+							</div>
+						</div>
+				</div>
+				</form>
+
+			</div>
+		</div>
+</div>
+
+
+ 
+ 
+ 
+ 
+ <h2 align="center">Akcijski Dogadjaji:</h2>
+ 
+ <table id="tabelaDogadjaj" align="center"  style="width: 70%;" border = 1 >
+	<thead >
+		<tr align="center">
+	      <th  >Naziv</th>
+	      <th >Pocetak</th>
+	      <th >Kraj</th>
+	      <th >Procenat</th>
+	      <th>Kategorije</th> 
+	      <th>Azuriraj</th>
+		</tr>
+  	</thead>
+  	<tbody>
+		<tr align="center" ng-repeat="dogadjaj in lista_dogadjaja track by $index">
+			<td style="width: 80%;" align="center" >
+				{{ dogadjaj.naziv }}
+			</td>
+			<td style="width: 80%;" align="center" >
+				{{ dogadjaj.pocetak }}
+			</td>
+			<td style="width: 80%;" align="center" >
+				{{ dogadjaj.zavrsetak }}
+			</td>
+			<td style="width: 80%;" align="center" >
+				{{ dogadjaj.popust }}
+			</td>
+			<td  style="width: 100%;" align="center" >
+			
+				<span ng-repeat="item in dogadjaj.listaKategorija">{{item.naziv }} </span>
+			
+
+			</td>
+			<td>
+			<button class="btn btn-primary" ng-click="azurirajDogadjaj(dogadjaj.sifra)">Azuriraj</button>
+			</td>
+
+		</tr>
+	</tbody>
+</table>
+ 
+ 
+ 
+ 
+ <div align="center">
+	 <br>
+	 <button  id="btnaddDogadjaj" type="submit" class="btn btn-primary " data-toggle="modal" data-target="#dogadjajWindow"> Dodaj Akcijski Dogadjaj</button>
+	 <br>
+ </div>
+ 
+</div>

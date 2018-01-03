@@ -1,0 +1,42 @@
+<div  ng-init="init()" >
+
+ <h1>Kategorija artikla: {{artkategorija.naziv}}</h1>
+ <input hidden="true" ng-model="artkategorija.sifra">
+ 
+ <table style="max-width: 500px" border = 1 >
+ 	<thead>
+	    <tr>
+	      <th >Naziv</th>
+	      <th >%</th>
+	      <th >Nadkategorija</th>
+	      <th >Nova nadkategorija</th>
+	      <th> <th>
+	    </tr>
+  	</thead>
+ 	<tbody>
+		<tr>
+			<td style="width: 30%;" align="center" >
+				<input ng-model="artkategorija.naziv" > 
+			</td>
+			<td style="width: 30%;" align="center" >
+				<input type="number" ng-model="artkategorija.maksimalni_popust" > 
+			</td>
+			<td style="width: 30%;" align="center" >
+				<input disabled="true" ng-model="artkategorija.nadkategorija.naziv" > 
+			</td>
+			
+			<td>
+				<div class="selectContainer" >
+					<select class="form-control sirina" ng-model="kateg"   ng-options="x.naziv for x in kategorije_artikla"></select>
+				</div>
+			</td>
+			<td >
+				<button class="btn btn-primary" style="width: 100%"; ng-click="izmeniKategoriju(artkategorija.sifra,artkategorija.naziv,artkategorija.maksimalni_popust,kateg.sifra)">Izmeni</button>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+
+ 
+</div>

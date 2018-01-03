@@ -1,0 +1,57 @@
+<div>
+ <h1 align="center">Lista Artikala:</h1>
+  <div align="center">
+   <font size="5"><b>Pretraga:&emsp;</b></font>
+  <input type="text" ng-change="sort(sortsifra,sortnaziv,sortkat,sortod,sortdo)" placeholder="sifra" ng-model="sortsifra" > 
+  <input type="text" ng-change="sort(sortsifra,sortnaziv,sortkat,sortod,sortdo)" placeholder="naziv" ng-model="sortnaziv" >
+  <input type="text" ng-change="sort(sortsifra,sortnaziv,sortkat,sortod,sortdo)" placeholder="kategorija" ng-model="sortkat" >
+  <input type="number" ng-change="sort(sortsifra,sortnaziv,sortkat,sortod,sortdo)" placeholder="od" ng-model="sortod" >
+  <input type="number" ng-change="sort(sortsifra,sortnaziv,sortkat,sortod,sortdo)" placeholder="do" ng-model="sortdo" >
+ 
+  </div>
+<table id="tabelaArtikla" align="center"  style="width: 90%;"  border = 2 >
+	<thead>
+		<tr align="center">
+			<th>Sifra</th>
+	     	<th>Naziv</th>
+			<th>Kategorija</th>
+		    <th>Cena</th>
+		    <th>Brojno Stanje</th>
+		    <th>Akcija</th>
+		    <th>Dodaj u korpu</th>
+	     
+		</tr>
+  	</thead>
+  	<tbody>
+		<tr ng-repeat="artikal in sortedlista_artikala |  filter:{sifra: sortsifra, naziv:sortnaziv} ">
+			<td style="width: 30%;" align="center" >
+				{{ artikal.sifra }}
+			</td>
+			
+			<td style="width: 30%;" align="center" >
+				{{ artikal.naziv }}
+			</td>
+			<td style="width: 30%;" align="center" >
+				{{ artikal.kategorija.naziv }}
+			</td>
+			<td style="width: 30%;" align="center" >
+				{{ artikal.cena }}
+			</td>
+			<td style="width: 30%;" align="center" >
+				{{ artikal.brojnoStanje }}
+			</td>
+			<td style="width: 30%;" align="center" >
+			    <input ng-init="initPopust(artikal.kategorija.sifra)" disabled="true" hidden="true"  ng-model="artikal.popust" >
+			    {{artikal.popust}}
+			</td>
+			<td style="width: 30%;" align="center" >
+				<input type="number" ng-model="brojArtikala" > 
+				<button class="btn btn-primary"  ng-click="dodajukorpu(artikal.sifra,brojArtikala)">Dodaj u korpu</button>
+			</td>
+			
+		</tr>
+	</tbody>
+</table>
+
+ 
+</div>

@@ -28,5 +28,27 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="src/main/webapp/lib/commons-codec-1.9.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/lib/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/lib/fluent-hc-4.5.3.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/lib/httpclient-4.5.3.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/lib/httpclient-cache-4.5.3.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/lib/httpclient-win-4.5.3.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/lib/httpcore-4.4.6.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/lib/httpmime-4.5.3.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/lib/jackson-core-asl-1.9.2.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/lib/jackson-jaxrs-1.9.2.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/lib/jackson-mapper-asl-1.9.2.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/lib/jackson-xc-1.9.2.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/lib/jersey-client-1.19.1.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/lib/jersey-core-1.19.1.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/lib/jersey-json-1.19.1.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/lib/jersey-server-1.19.1.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/lib/jersey-servlet-1.19.1.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/lib/jettison-1.1.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/lib/jna-4.1.0.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/lib/jna-platform-4.1.0.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/lib/jsr311-api-1.1.1.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/lib/jzmq-3.1.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

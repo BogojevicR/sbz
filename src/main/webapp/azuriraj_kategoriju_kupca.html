@@ -1,0 +1,54 @@
+<div  ng-init="init()" >
+ <h1>Kategorija kupca: {{kategorija.ime_kategorije}}</h1>
+ <h2>Pragovi Potrosnje:</h2>
+<input hidden="true" ng-model="kategorija.id">
+
+
+ <table style="max-width: 500px" border = 1 >
+ 	<thead>
+	    <tr>
+	      <th >Od</th>
+	      <th >Do</th>
+	      <th >%</th>
+	      <th ></th>
+	      <th ></th>
+	    </tr>
+  	</thead>
+ 	<tbody>
+		<tr	ng-repeat="pragovi in kategorija.pragoviPotrosnje track by $index" >
+			<td style="width: 30%;" align="center" >
+				<input type="number" type="number" ng-model="pragovi.donja_granica" > 
+			</td>
+			<td style="width: 30%;" align="center" >
+				<input type="number" type="number" ng-model="pragovi.gornja_granica" > 
+			</td>
+			<td style="width: 30%;" align="center" >
+				<input type="number" type="number" ng-model="pragovi.procenat" > 
+			</td>
+			<td  style="width: 30%;" align="center">
+				<button class="btn btn-primary" ng-click="azurirajPrag(pragovi.id,pragovi.donja_granica,pragovi.gornja_granica,pragovi.procenat)">Azuriraj</button>
+			</td>
+			<td  style="width: 30%;" align="center">
+				<button class="btn btn-danger" ng-click="obrisiPrag(kategorija.id,pragovi.id)">Obrisi</button>
+			</td>
+		</tr>
+		<tr>
+			<td style="width: 30%;" align="center" >
+				<input ng-model="donja" > 
+			</td>
+			<td style="width: 30%;" align="center" >
+				<input ng-model="gornja" > 
+			</td>
+			<td style="width: 30%;" align="center" >
+				<input ng-model="procenat" > 
+			</td>
+			<td >
+				<button class="btn btn-primary" style="width: 100%"; ng-click="dodajPrag(kategorija.id,donja,gornja,procenat)">Dodaj</button>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+
+ 
+</div>

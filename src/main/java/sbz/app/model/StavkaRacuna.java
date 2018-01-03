@@ -155,6 +155,15 @@ public class StavkaRacuna {
 	public void setListaPopusta(List<PopustNaStavku> listaPopusta) {
 		this.listaPopusta = listaPopusta;
 	}
+
+
+	@Override
+	public String toString() {
+		return "StavkaRacuna [id=" + id + ", racun=" + racun + ", redniBroj=" + redniBroj + ", artikal=" + artikal
+				+ ", cena=" + cena + ", kolicina=" + kolicina + ", originalnaUkupnaCenaStavke="
+				+ originalnaUkupnaCenaStavke + ", procenatUmanjenja=" + procenatUmanjenja + ", konacnaCenaStavke="
+				+ konacnaCenaStavke + ", listaPopusta=" + listaPopusta + "]";
+	}
 	
 	
 	

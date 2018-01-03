@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -17,7 +18,7 @@ public class AkcijskiDogadjaj {
 	private Date pocetak;
 	private Date zavrsetak;
 	private float popust;
-	@OneToMany
+	@ManyToMany
 	//TODO 01: MOZDA TREBA @ElementCollection kod svih lista
 	private List<KategorijaArtikla> listaKategorija;
 	
@@ -135,6 +136,16 @@ public class AkcijskiDogadjaj {
 
 	public void setListaKategorija(List<KategorijaArtikla> listaKategorija) {
 		this.listaKategorija = listaKategorija;
+	}
+
+
+
+
+
+	@Override
+	public String toString() {
+		return "AkcijskiDogadjaj [sifra=" + sifra + ", naziv=" + naziv + ", pocetak=" + pocetak + ", zavrsetak="
+				+ zavrsetak + ", popust=" + popust + ", listaKategorija=" + listaKategorija + "]";
 	}
 	
 	

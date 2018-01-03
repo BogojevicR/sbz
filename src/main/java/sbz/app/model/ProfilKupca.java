@@ -39,54 +39,61 @@ public class ProfilKupca {
 		super();
 	}
 
+	
+	
 
-	public ProfilKupca(String id, String adress,KategorijaKupca kp, int bonus_points) {
+	public ProfilKupca(String sifra, String adresa, int nagradni_bodovi, KategorijaKupca kategorija,
+			List<Racun> istorija_kupovina) {
 		super();
-		this.sifra = id;
-		this.adresa = adress;
-		this.kategorija=kp;
-		this.nagradni_bodovi = bonus_points;
+		this.sifra = sifra;
+		this.adresa = adresa;
+		this.nagradni_bodovi = nagradni_bodovi;
+		this.kategorija = kategorija;
 	}
 
 
-	public String getId() {
+
+
+	public String getSifra() {
 		return sifra;
 	}
 
 
-	public void setId(String id) {
-		this.sifra = id;
+
+
+	public void setSifra(String sifra) {
+		this.sifra = sifra;
 	}
 
 
-	public String getAdress() {
+
+
+	public String getAdresa() {
 		return adresa;
 	}
 
 
-	public void setAdress(String adress) {
-		this.adresa = adress;
+
+
+	public void setAdresa(String adresa) {
+		this.adresa = adresa;
 	}
 
 
-	public int getBonus_points() {
+
+
+	public int getNagradni_bodovi() {
 		return nagradni_bodovi;
 	}
 
 
-	public void setBonus_points(int bonus_points) {
-		this.nagradni_bodovi = bonus_points;
+
+
+	public void setNagradni_bodovi(int nagradni_bodovi) {
+		this.nagradni_bodovi = nagradni_bodovi;
 	}
 
 
-	public List<Racun> getShoppingHistory() {
-		return istorija_kupovina;
-	}
-
-
-	public void setShoppingHistory(List<Racun> shoppingHistory) {
-		this.istorija_kupovina = shoppingHistory;
-	}
 
 
 	public KategorijaKupca getKategorija() {
@@ -94,9 +101,40 @@ public class ProfilKupca {
 	}
 
 
+
+
 	public void setKategorija(KategorijaKupca kategorija) {
 		this.kategorija = kategorija;
 	}
+
+
+
+
+	public List<Racun> getIstorija_kupovina() {
+		return istorija_kupovina;
+	}
+
+
+
+
+	public void setIstorija_kupovina(List<Racun> istorija_kupovina) {
+		this.istorija_kupovina = istorija_kupovina;
+	}
+
+
+
+
+	@Override
+	public String toString() {
+		return "ProfilKupca [sifra=" + sifra + ", adresa=" + adresa + ", nagradni_bodovi=" + nagradni_bodovi
+				+ ", kategorija=" + kategorija + ", istorija_kupovina=" + istorija_kupovina + "]";
+	}
+
+
+	
+	
+
+
 
 	
 	

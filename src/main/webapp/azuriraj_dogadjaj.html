@@ -1,0 +1,46 @@
+<div  ng-init="init()" >
+
+ <h1>Akcijski Dogadjaj: {{akcijski_dogadjaj.naziv}}</h1>
+ <input hidden="true" ng-model="akcijski_dogadjaj.sifra">
+ 
+ <table style="max-width: 500px" border = 1 >
+ 	<thead>
+	    <tr>
+	      <th >Naziv</th>
+	      <th >Pocetak</th>
+	      <th >Zavrsetak</th>
+	      <th >Procenat</th>
+	      <th> Obuhvacene Kategorije</th>
+	      <th> Nove Obuhvacene Kategorije</th>
+	      <th> <th>
+	    </tr>
+  	</thead>
+ 	<tbody>
+		<tr>
+			<td style="width: 30%;" align="center" >
+				<input ng-model="akcijski_dogadjaj.naziv" > 
+			</td>
+			<td style="width: 30%;" align="center" >
+				<input ng-init="setDogadjajDate(akcijski_dogadjaj.pocetak)"   type="date" id="pocetakPicker"  ng-model="akcijski_dogadjaj.pocetak"    class="form-control" >
+							
+			</td>
+			<td style="width: 30%;" align="center" >
+				<input  type="date" ng-init="setDogadjajDateZ(akcijski_dogadjaj.zavrsetak)" ng-model="akcijski_dogadjaj.zavrsetak" id="krajPicker"  class="form-control" >
+			</td>
+			<td style="width: 30%;" align="center" >
+				<input type="number" ng-model="akcijski_dogadjaj.popust" > 
+			</td>
+			
+			<td>
+				 <select  ng-options="x.naziv for x in lista_kategorija" ng-model="akcijski_dogadjaj.listaKategorija"  multiple></select>
+			</td>
+			<td >
+				<button class="btn btn-primary" style="width: 100%"; ng-click="izmeniDogadjaj(akcijski_dogadjaj.sifra,akcijski_dogadjaj.naziv,akcijski_dogadjaj.pocetak,akcijski_dogadjaj.zavrsetak,akcijski_dogadjaj.popust,akcijski_dogadjaj.listaKategorija)">Izmeni</button>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+
+ 
+</div>

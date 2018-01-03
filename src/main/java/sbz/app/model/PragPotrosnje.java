@@ -94,6 +94,19 @@ public class PragPotrosnje {
 	public void setProcenat(double procenat) {
 		this.procenat = procenat;
 	}
+
+
+
+
+
+	@Override
+	public String toString() {
+		return "PragPotrosnje [sifra=" + sifra + ", donja_granica=" + donja_granica + ", gornja_granica="
+				+ gornja_granica + ", procenat=" + procenat + "]";
+	}
+	
+	
+	
 	
 	//TODO 1: Implementiraj funkciju dodele za pragove
 	

@@ -1,7 +1,11 @@
 package sbz.app.model;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -35,27 +39,30 @@ public class Korisnik implements Serializable{
 	private Role uloga;
 	@Column(name="datum_registrovanja")
 	private Date datum_registrovanja;
-	
+
 	@OneToOne
 	private ProfilKupca profil_kupca;
 	
-	
-	public Korisnik(){
+	public Korisnik() {
 		super();
 	}
+
 	
 	
-	public Korisnik(String username, String first_name, String last_name, String password, Role role,
-			Date registration_date, ProfilKupca user_info) {
+
+	public Korisnik(String username, String ime, String prezime, String password, Role uloga, Date datum_registrovanja,
+			ProfilKupca profil_kupca) {
 		super();
 		this.username = username;
-		this.ime = first_name;
-		this.prezime = last_name;
+		this.ime = ime;
+		this.prezime = prezime;
 		this.password = password;
-		this.uloga = role;
-		this.datum_registrovanja = registration_date;
-		this.profil_kupca = user_info;
+		this.uloga = uloga;
+		this.datum_registrovanja = datum_registrovanja;
+		this.profil_kupca = profil_kupca;
 	}
+
+
 
 
 	public String getUsername() {
@@ -63,29 +70,41 @@ public class Korisnik implements Serializable{
 	}
 
 
+
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
 
 
-	public String getFirst_name() {
+
+
+	public String getIme() {
 		return ime;
 	}
 
 
-	public void setFirst_name(String first_name) {
-		this.ime = first_name;
+
+
+	public void setIme(String ime) {
+		this.ime = ime;
 	}
 
 
-	public String getLast_name() {
+
+
+	public String getPrezime() {
 		return prezime;
 	}
 
 
-	public void setLast_name(String last_name) {
-		this.prezime = last_name;
+
+
+	public void setPrezime(String prezime) {
+		this.prezime = prezime;
 	}
+
+
 
 
 	public String getPassword() {
@@ -93,39 +112,89 @@ public class Korisnik implements Serializable{
 	}
 
 
+
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
 
 
-	public Role getRole() {
+
+
+	public Role getUloga() {
 		return uloga;
 	}
 
 
-	public void setRole(Role role) {
-		this.uloga = role;
+
+
+	public void setUloga(Role uloga) {
+		this.uloga = uloga;
 	}
 
 
-	public Date getRegistration_date() {
+
+
+	public Date getDatum_registrovanja() {
 		return datum_registrovanja;
 	}
 
 
-	public void setRegistration_date(Date registration_date) {
-		this.datum_registrovanja = registration_date;
+
+
+	public void setDatum_registrovanja(Date datum_registrovanja) {
+		this.datum_registrovanja = datum_registrovanja;
 	}
 
 
-	public ProfilKupca getUser_info() {
+
+
+	public ProfilKupca getProfil_kupca() {
 		return profil_kupca;
 	}
 
 
-	public void setUser_info(ProfilKupca user_info) {
-		this.profil_kupca = user_info;
+
+
+	public void setProfil_kupca(ProfilKupca profil_kupca) {
+		this.profil_kupca = profil_kupca;
 	}
+	
+	public void podesiprofil(Korisnik korisnik){
+		korisnik.getProfil_kupca().setSifra(UUID.randomUUID().toString().replaceAll("-", ""));
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		//dateFormat.format(date);
+		
+		korisnik.setDatum_registrovanja(date);
+		if(korisnik.getUloga()==Korisnik.Role.KUPAC){
+			korisnik.getProfil_kupca().setIstorija_kupovina(new ArrayList<Racun>());
+		}else{
+			korisnik.setProfil_kupca(null);
+		}
+	}
+
+
+
+
+	@Override
+	public String toString() {
+		return "Korisnik [username=" + username + ", ime=" + ime + ", prezime=" + prezime + ", password=" + password
+				+ ", uloga=" + uloga + ", datum_registrovanja=" + datum_registrovanja + ", profil_kupca=" + profil_kupca
+				+ "]";
+	}
+
+
+
+
+	
+
+
+	
+
+
+	
 	
 	
 	

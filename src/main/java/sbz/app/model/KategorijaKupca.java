@@ -82,6 +82,21 @@ public class KategorijaKupca {
 	public void setPragoviPotrosnje(List<PragPotrosnje> pragoviPotrosnje) {
 		this.pragoviPotrosnje = pragoviPotrosnje;
 	}
+
+	public void addPragPotrosnje(PragPotrosnje pp){
+		this.pragoviPotrosnje.add(pp);
+	}
+	
+	public void deletePragPotrosnje(PragPotrosnje pp){
+		this.pragoviPotrosnje.remove(pp);
+	}
+	
+
+	@Override
+	public String toString() {
+		return "KategorijaKupca [sifra=" + sifra + ", ime_kategorije=" + ime_kategorije + ", pragoviPotrosnje="
+				+ pragoviPotrosnje + "]";
+	}
 	
 	
 	

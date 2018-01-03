@@ -97,6 +97,14 @@ public enum VrstaPopusta {OSNOVNI, DODATNI};
 	public void setVrstaPopusta(VrstaPopusta vrstaPopusta) {
 		this.vrstaPopusta = vrstaPopusta;
 	}
+
+
+
+	@Override
+	public String toString() {
+		return "PopustNaStavku [sifra=" + sifra + ", racun=" + racun + ", stavkaRacuna=" + stavkaRacuna
+				+ ", procenatUmanjenja=" + procenatUmanjenja + ", vrstaPopusta=" + vrstaPopusta + "]";
+	}
 	
 	
 	
