@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
+@com.fasterxml.jackson.annotation.JsonIgnoreProperties(ignoreUnknown=true)
 public class Artikal {
 	
 public enum StatusZapisa {AKTIVAN, ARHIVIRAN}
@@ -217,7 +218,39 @@ public enum StatusZapisa {AKTIVAN, ARHIVIRAN}
 	public void setMinimalno_stanje(int minimalno_stanje) {
 		this.minimalno_stanje = minimalno_stanje;
 	}
+	
+	public boolean proveriKategoriju(String name){
 
+		if(name.equals(this.getKategorija().getNaziv())){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean jeKategorija(String sifra){
+
+		if(sifra.equals(this.getKategorija().getSifra())){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean proveriRobu() throws NullPointerException{
+		
+		try {
+			if("Roba siroke potrosnje".equals(this.getKategorija().getNaziv())){
+				return true;
+			}
+			if("Roba siroke potrosnje".equals(this.getKategorija().getNadkategorija().getNaziv())){
+				return true;
+			}
+		} catch (NullPointerException npe) {
+			
+		    return false;
+		}
+		return false;
+	}
+	
 
 	public void podesi(Artikal art){		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

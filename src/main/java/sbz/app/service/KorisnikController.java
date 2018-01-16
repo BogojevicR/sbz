@@ -1,8 +1,14 @@
 package sbz.app.service;
+import sbz.app.Application;
+import sbz.app.model.AkcijskiDogadjaj;
 import sbz.app.model.Korisnik;
 import sbz.app.model.Racun;
+import sbz.app.model.StavkaRacuna;
+import sbz.app.repository.AkcijskiDogadjajRepository;
 import sbz.app.repository.KorisnikRepository;
 import sbz.app.repository.ProfilKupcaRepository;
+import sbz.app.repository.RacunRepository;
+import sbz.app.repository.StavkaRacunaRepository;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -17,6 +23,10 @@ import java.util.UUID;
 
 import javax.persistence.EnumType;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.kie.api.KieServices;
+import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.KieSession;
 import org.sonatype.inject.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,7 +50,13 @@ public class KorisnikController {
 	KorisnikRepository rep;
 	@Autowired
 	ProfilKupcaRepository profilrep;
+	@Autowired
+	RacunRepository racunrep;
+	@Autowired
+	StavkaRacunaRepository stavkaracrep;
 	
+	@Autowired
+	AkcijskiDogadjajRepository adrep;
 	
 	@RequestMapping("/all")
 	@ResponseBody
@@ -86,6 +102,61 @@ public class KorisnikController {
 		}
 		return null;
 		
+	}
+	
+	
+	@RequestMapping(value="/racun/create", method=RequestMethod.POST)
+	public Racun kreirajRacun(@RequestBody final String userString) throws JsonParseException, JsonMappingException, IOException, JsonMappingException, IOException{
+			
+			ObjectMapper mapper = new ObjectMapper();
+			System.out.println(userString);
+			Racun racun = mapper.readValue(userString, Racun.class);
+			racun.podesiRacun(racun);
+			
+		/*	for(StavkaRacuna sr: racun.getListaStavki()){
+				stavkaracrep.save(sr);
+				
+			}
+			racunrep.save(racun); 
+			
+			*/
+			//Prolazi korz pravila
+			
+			KieServices ks = KieServices.Factory.get();
+			KieContainer kContainer = ks.getKieClasspathContainer();
+			KieSession kSession = kContainer.newKieSession("stavka-rules");
+			kSession.insert(racun);
+			for(int i=0; i<racun.getListaStavki().size(); i++) {
+				
+				kSession.insert(racun.getListaStavki().get(i));
+			}
+			
+			List<AkcijskiDogadjaj> dogadjaji = adrep.findAll();
+			
+			for(int i=0; i<dogadjaji.size(); i++){
+				kSession.insert(dogadjaji.get(i));
+			}
+
+			
+			
+			System.out.println("Sistem za popuste je poceo obradu!");
+			System.out.println(kSession.fireAllRules());
+			System.out.println("Sistem je zavrsio obradu! ");
+			
+			for(int i=0; i<racun.getListaStavki().size(); i++) {
+				
+				System.out.println(racun.getListaStavki().get(i).getArtikal().getNaziv()+" :"+racun.getListaStavki().get(i).getListaPopusta());
+			}
+
+			
+			return racun;
+			
+		/*	if(dogrep.findBySifra(dog.getSifra())!=null){
+				return false;
+			}else{
+				dogrep.save(dog);
+				return true;
+			} */
 	}
 	
 	

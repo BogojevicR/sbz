@@ -1,8 +1,10 @@
 package sbz.app.model;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -156,6 +158,20 @@ public class Racun {
 				+ ", originalnaCena=" + originalnaCena + ", procenatUmanjenja=" + procenatUmanjenja + ", konacnaCena="
 				+ konacnaCena + ", brojPotrosenihBodova=" + brojPotrosenihBodova + ", brojOstvarenihBodova="
 				+ brojOstvarenihBodova + ", listaPopusta=" + listaPopusta + ", listaStavki=" + listaStavki + "]";
+	}
+
+	public void podesiRacun(Racun racun) {
+		racun.setSifra(UUID.randomUUID().toString().replaceAll("-", ""));
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		racun.setDatum(date); 
+		racun.setStanje(StanjeRacuna.PORUCENO);
+		for(StavkaRacuna sr: racun.getListaStavki()){
+			sr.setId(UUID.randomUUID().toString().replaceAll("-", ""));
+		//	sr.setRacun(racun);
+			
+		} 
+		
 	}
 	
 	

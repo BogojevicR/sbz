@@ -121,8 +121,8 @@
 			<td style="width: 80%;" align="center" >
 				{{ artikal.brojnoStanje }}
 			</td>
-			<td  style="width: 100%;" align="center" >
-				{{ artikal.datum_kreiranja }}
+			<td ng-init="loadDatum(artikal.datum_kreiranja)" ng-  style="width: 100%;" align="center" >
+				<div  >{{ artikal.datum_kreiranja }}</div>
 			</td>
 			<td style="width: 80%;" align="center" >
 				{{ artikal.treba_zaliha }}

@@ -4,7 +4,7 @@ var app = angular.module('app.controllers',[]);
 app.controller('appController', ['$http','$window','$location','$rootScope','$scope','appService', 
 	function($http,$window,$location,$scope,$rootScope, appService) {
 	
-
+	
 
 	$scope.init= function() {
 			$scope.CheckUser();
@@ -12,6 +12,7 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 			$scope.getKategorijeArtikla();
 			$scope.getAllArtikal();
 			$scope.getAkcijskeDogadjaje();
+			$scope.getUser();
 			if(localStorage.getItem("username")==null){
 				localStorage.setItem("username", null);
 				localStorage.setItem("lozinka", null);
@@ -21,8 +22,10 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 				
 				if(localStorage.getItem("uloga")=="KUPAC"){
 					$("#profileBtn").show();
+					$("#korpaBtn").show();
 				}else{
 					$("#profileBtn").hide();
+					$("#korpaBtn").hide();
 				}
 				
 				$("#logoutBtn").show();
@@ -33,6 +36,7 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 				$("#loginBtn").show();
 				$("#regBtn").show();
 				$("#profileBtn").hide();
+				$("#korpaBtn").hide();
 			}
 	}
 	$scope.roles = ["KUPAC", "MENADZER", "PRODAVAC"];
@@ -40,6 +44,7 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 			sifra:"",
 			popust:""
 	}
+	//Ako se registruje kupac da doda polje za adresu
 	$scope.changedRole= function (role){
 		if(role=="KUPAC"){
 			$("#adresa").show();
@@ -47,7 +52,7 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 			$("#adresa").hide();
 		}
 	}
-	
+	//Registracija korisnika
 	$scope.createKorisnik = function(username,lozinka,ime,prezime,datePicker,uloga,adresa){
 		console.log("USAO U createKorisnik")
 		
@@ -102,6 +107,8 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 			
 		})		
 	}
+	
+	
 	$scope.logout = function(username,lozinka){
 		
 				$rootScope.korisnik=null;
@@ -111,7 +118,7 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 				$window.location.href = ""
 				$scope.$apply;
 		}	
-
+	//Provera da li je logovan i pretvaranje datuma u string
 	$scope.CheckUser = function(){
 		var uname=localStorage.getItem("username");
 		var pass=localStorage.getItem("lozinka");
@@ -126,27 +133,39 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 			}
 		})
 	}
-	
+	//Logovan User
+	$scope.getUser=function(){
+		var uname=localStorage.getItem("username");
+		var pass=localStorage.getItem("lozinka");
+		appService.login(uname,pass).then(function(response){
+			if(response.data!=null){
+				$rootScope.logovan_korisnik=response.data;
+			}else{
+				$rootScope.logovan_korisnik=null;
+			}
+		})
+	}
+	// Lista kategorije kupaca
 	$scope.getKategorijeKupca = function(){
 		appService.getKategorijeKupca().then(function(response){
 			$rootScope.kategorije_kupca=response.data;
 		})	
 	}
-	
+	//Azuriranje kategorije kupca
 	$scope.azurirajKategoriju_kupca= function(ime_kategorije_kupca){
 		appService.getKatKupcaBySifra(ime_kategorije_kupca).then(function(response){
 			$scope.kategorija=response.data;
 		})	
 		$location.path('/azuriraj_kategoriju_kupca')
 	}
-	
+	// Azuriranje praga potrosnje
 	$scope.azurirajPrag=function(sifra,donja,gornja,procenat){
 		appService.editPragBySifra(sifra,donja,gornja,procenat).then(function(response){
 			$location.path('/menadzer')
 		})
 		
 	}
-	
+	//Dodavanje praga potrosnje
 	$scope.dodajPrag=function(sifraKat,donja,gornja,procenat){
 		appService.dodajPragKategoriji(sifraKat,donja,gornja,procenat).then(function(response){
 			if(response.data==true){
@@ -158,7 +177,7 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 			
 		})
 	}
-	
+	// Brisanje praga potrosnje
 	$scope.obrisiPrag=function(sifraKat,sifra){
 		appService.deletePrag(sifraKat,sifra).then(function(response){
 			if(response.data==true){
@@ -169,7 +188,7 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 			}
 		})
 	}
-	
+	// Lista kategorija artikala
 	$scope.getKategorijeArtikla = function(){
 		appService.getKategorijeArtikla().then(function(response){
 			$scope.kategorije_artikla=response.data;
@@ -178,7 +197,7 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 		})	
 	}
 	
-	
+	// Dodavanje kategorije artikla
 	$scope.dodajKategorijuArtikla = function(naziv,kategorija,popust){
 		var sifraa=null;
 		if(kategorija!=undefined){
@@ -206,25 +225,27 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 		})
 		
 		}
-	
+	// Azuriranje kategorije artikla
 	$scope.azurirajKategoriju_artikla= function(sifra){
 		appService.getKatArtBySifra(sifra).then(function(response){
 			$scope.artkategorija=response.data;
+			$location.path('/azuriraj_kategoriju_artikla')
 		})	
-		$location.path('/azuriraj_kategoriju_artikla')
+		
 	}
+	// Izmena kategorije
 	
 	$scope.izmeniKategoriju=function(sifra,naziv,procenat,nadkategorija){
 		appService.izmeniKategoriju(sifra,naziv,procenat,nadkategorija).then(function(response){
 			$location.path('/menadzer')
 		})
 	}
-	
+	// Dobijanje liste artikala
 	$scope.getAllArtikal = function(){
 		$scope.lista_artikala=[];
 		$scope.sortedlista_artikala=[];
 		appService.getAllArtikal().then(function(response){
-			
+			$scope.lista_artikala=response.data;
 			angular.forEach(response.data,function(value,index){
 	            if(value.status_zapisa=="AKTIVAN"){
 	            	
@@ -232,12 +253,12 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 	            }
 	        })
 			
-			$scope.lista_artikala=response.data;
 			
-			angular.forEach($scope.lista_artikala,function(value,index){
+			
+		/*	angular.forEach($scope.sortedlista_artikala,function(value,index){
 				value.datum_kreiranja=$scope.convertToString(value.datum_kreiranja);
 
-	        })
+	        }) */
 	        
 	        angular.forEach($scope.sortedlista_artikala,function(value,index){
 				value.popust=0;
@@ -247,13 +268,19 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 
 		})	
 	}
-	
+	// Dobijanje artikla preko sifre
 	$scope.getArtikalBySifra=function(sifra){
 		appService.getArtikalBySifra(sifra).then(function(response){
 			$location.path('/azuriraj_artikal')
 		})
 	}
 	
+	$scope.getArtikalSifra=function(sifra){
+		appService.getArtikalBySifra(sifra).then(function(response){
+			return response.data;
+		})
+	}
+	//Dodaj novi artikal
 	$scope.dodajArtikal=function(nazivA,cenaA,kateg,stanjeA,minimumA){
 		ArtikalJSON={
 				sifra: kateg.sifra,
@@ -279,6 +306,8 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 		
 	}
 	
+	// Pokupi listu dogadjaja
+	
 	$scope.getAkcijskeDogadjaje = function(){
 		appService.getAkcijskeDogadjaje().then(function(response){
 			$scope.lista_dogadjaja=response.data;
@@ -298,7 +327,7 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 	}
 	
 	
-	
+	//Dodavanje novog dogadjaja
 	$scope.dodajDogadjaj=function(nazivDog,multipleSelect,procenatDog,pocetakDog,krajDog){
 		DogadjajJSON={
 				sifra: nazivDog,
@@ -330,11 +359,12 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 	$scope.azurirajDogadjaj= function(sifra){
 		appService.getDogadjajBySifra(sifra).then(function(response){
 			$scope.akcijski_dogadjaj=response.data;
+			$location.path('/azuriraj_dogadjaj')
 		})	
-		$location.path('/azuriraj_dogadjaj')
+		
 	}
 	
-	
+	//Izmena dogadjaja
 	$scope.izmeniDogadjaj=function(sifra,naziv,pocetak,zavrsetak,popust,listaKategorija){
 		angular.forEach(listaKategorija,function(value,index){
 			delete value.$$hashKey;
@@ -366,7 +396,7 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 	
 	
 	
-	
+	//funkcija za filter kod pretrazivanja
 	
 	$scope.sort=function(sortsifra,sortnaziv,sortkat,sortod,sortdo){
 		if(sortsifra==undefined){
@@ -395,11 +425,8 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
         })
 	}
 	
-	$scope.dodajukorpu=function(sifra,brojArtikla){
-		
-	}
-	
-	
+
+	//Proverava ulogu kupca
 	$scope.userRoleCheck=function(){
 		if(localStorage.getItem("username")==null){
 			$location.path('')
@@ -450,7 +477,7 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 	$scope.setDogadjajDateZ=function(zavrsetak){
 		$scope.akcijski_dogadjaj.zavrsetak=new Date(zavrsetak);
 	}
-	
+	// Pravi listu objekata sa dogadjajima i njihovim kategorijama
 	$scope.podesiAkcije=function(){
 		$scope.akcijepoKategoriji=[];
 		
@@ -469,7 +496,7 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 	    })
 	}
 	
-	
+	//Dodaje prikaz popusta za aktivne akcije korisnicima
 	$scope.initPopust=function(sifra){
 		var today = new Date().toLocaleString();
 	
@@ -483,7 +510,7 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
         })
 	}
 	
-	
+	//Proverava da li danasnji datum upada u datum dogadjaja
 	$scope.betweenDate=function(date1,date2,date3){
 		var date1=date1.split(",");
 		var date3=date3.split(",");
@@ -499,9 +526,107 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 		
 	}
 	
-	
+	$scope.getArtikalSifra=function(sifra){
+		angular.forEach($scope.lista_artikala,function(value,index){
+			if(value.sifra==sifra){
+				$scope.art=value;
+				return;
+			}
 
+        })
+	}
 	
+	//Dodaje artikal u korpu
+	$scope.dodajUKorpu=function(sifra,brojArtikala){
+		$scope.getArtikalSifra(sifra);
+		if($scope.korpa==undefined){
+			$scope.korpa=[];
+		}
+		if($scope.art.brojnoStanje<brojArtikala){
+			alert("Trenunto nema dovoljno proizoda na stanju!")
+			return;
+		}
+		Porudzbina={
+				artikal: $scope.art,
+				broj: brojArtikala	
+	
+		}
+		if(Porudzbina.broj<=0 || Porudzbina.broj==null || Porudzbina.broj==undefined ){
+			alert("Mora biti pozitivan broj proizvoda!")
+			return;
+		}
+		$scope.dodajArtikal(Porudzbina);	
+		alert("Proizvod je dodat u korpu!")
+	}
+	
+	//Provera da li postoji vec isti artikal u korpi
+	$scope.dodajArtikal=function(porudzbina){
+		var ima=false;
+		angular.forEach($scope.korpa,function(por,index){
+			if(por.artikal.sifra==porudzbina.artikal.sifra){
+				ima=true;
+				por.broj+=porudzbina.broj;
+			}
+        })
+        if(ima==false){
+        	$scope.korpa.push(porudzbina);
+        }	
+	}
+	// Brise artikal iz korpe
+	$scope.obrisiArikal=function(artikal){
+		var index=$scope.korpa.indexOf(artikal);
+		$scope.korpa.splice(index, 1);
+	}
+	
+	$scope.kreirajRacun=function(){
+		var racun=new Object();
+		racun.sifra="sifra";
+		racun.datum= null;
+		racun.kupac=$rootScope.logovan_korisnik;
+		racun.stanje=null;
+		racun.originalnaCena=0;
+		racun.procenatUmanjenja=0;
+		racun.konacnaCena=0;
+		racun.brojPotrosenihBodova=0;
+		racun.brojOstvarenihBodova=0;
+		
+		racun.listaPopusta=[];
+		racun.listaStavki=[];
+		
+		
+		for(var i= 0; i<$scope.korpa.length; i++){	
+			
+			StavkaRacuna={
+					id: "id",
+					racun: null,
+					redniBroj: i,
+					artikal: $scope.korpa[i].artikal,
+					cena: $scope.korpa[i].artikal.cena,
+					kolicina: $scope.korpa[i].broj,
+					originalnaUkupnaCenaStavke: $scope.korpa[i].artikal.cena*$scope.korpa[i].broj,
+					procenatUmanjenja: 0,
+					konacnaCenaStavke: 0,
+					listaPopusta: []
+			} 
+			racun.listaStavki.push(StavkaRacuna);
+			
+			
+		}
+		
+		appService.kreirajRacun(racun).then(function(response){
+		
+			console.log(response.data);
+		/*	if(response.data==false){
+				alert("Greska Pokusajte ponovo!")
+			}else{
+			
+				$location.path('/menadzer')
+				window.location.reload(); 
+			} */
+		})
+		console.log(racun);
+		
+	}	
 }
 ])
 

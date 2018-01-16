@@ -18,10 +18,9 @@ public class Application {
 
 	}
 
-	@Bean
-	public KieContainer kieContainer() {
-		return KieServices.Factory.get().getKieClasspathContainer();
-	}
+	
+
+	
 	
 
 }

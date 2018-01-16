@@ -222,7 +222,7 @@ public class MenadzerController {
 	
 	@RequestMapping("/all/dogadjaj")
 	@ResponseBody
-	public List<AkcijskiDogadjaj> getAllDogadjaj(){
+	public  List<AkcijskiDogadjaj> getAllDogadjaj(){
 		
 		return dogrep.findAll();
 		

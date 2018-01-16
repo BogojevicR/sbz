@@ -33,6 +33,10 @@ app.config(function($stateProvider,$urlRouterProvider) {
 		url:'/azuriraj_dogadjaj',
 		templateUrl:'/azuriraj_dogadjaj.html',
 		controller:'appController'	
+	}).state('korpa',{
+		url:'/korpa',
+		templateUrl:'/korpa.html',
+		controller:'appController'	
 	});
 	$urlRouterProvider.otherwise('/');
 	

@@ -1,0 +1,53 @@
+<div >
+
+<h1>Kupac: {{korisnik.username}}</h1>
+<h2>Korpa:<br></h2>
+
+<table id="tabelaArtikla" align="center"  style="width: 90%;"  border = 2 >
+	<thead>
+		<tr align="center">
+			<th>Sifra</th>
+	     	<th>Naziv</th>
+			<th>Kategorija</th>
+		    <th>Cena</th>
+		    <th>Popust %</th>
+		    <th>Broj Porucenih</th> 
+		    <th>Obrisi</th>  
+		</tr>
+  	</thead>
+  	<tbody>
+		<tr ng-repeat="korpa in korpa  ">
+			<td style="width: 30%;" align="center" >
+				{{ korpa.artikal.sifra }}
+			</td>
+			
+			<td style="width: 30%;" align="center" >
+				{{  korpa.artikal.naziv }}
+			</td>
+			<td style="width: 30%;" align="center" >
+				{{  korpa.artikal.kategorija.naziv }}
+			</td>
+			<td style="width: 30%;" align="center" >
+				{{  korpa.artikal.cena }}
+			</td>
+			<td style="width: 30%;" align="center" >
+				{{  korpa.artikal.popust }}
+			</td>
+			<td style="width: 30%;" align="center" >
+			    {{ korpa.broj}}
+			</td>
+			<td style="width: 30%;" align="center" >
+			    <button  type="submit" class="btn btn-primary " ng-click="obrisiArikal( korpa)"> Obrisi</button>
+			</td>
+			
+		</tr>
+	</tbody>
+</table>
+
+<div align="center">
+	 <br>
+	 <button  type="submit" class="btn btn-primary " ng-click="kreirajRacun()"> Kreiraj Racun</button>
+	 <br>
+ </div>
+{{racun}}
+</div>

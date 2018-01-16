@@ -21,11 +21,11 @@
 				<input ng-model="akcijski_dogadjaj.naziv" > 
 			</td>
 			<td style="width: 30%;" align="center" >
-				<input ng-init="setDogadjajDate(akcijski_dogadjaj.pocetak)"   type="date" id="pocetakPicker"  ng-model="akcijski_dogadjaj.pocetak"    class="form-control" >
+				<input    type="date" id="pocetakPicker"  ng-model="akcijski_dogadjaj.pocetak"    ng-init="setDogadjajDate(akcijski_dogadjaj.pocetak)" class="form-control" >
 							
 			</td>
 			<td style="width: 30%;" align="center" >
-				<input  type="date" ng-init="setDogadjajDateZ(akcijski_dogadjaj.zavrsetak)" ng-model="akcijski_dogadjaj.zavrsetak" id="krajPicker"  class="form-control" >
+				<input  type="date"  ng-model="akcijski_dogadjaj.zavrsetak" id="krajPicker"  ng-init="setDogadjajDateZ(akcijski_dogadjaj.zavrsetak)" class="form-control" >
 			</td>
 			<td style="width: 30%;" align="center" >
 				<input type="number" ng-model="akcijski_dogadjaj.popust" > 

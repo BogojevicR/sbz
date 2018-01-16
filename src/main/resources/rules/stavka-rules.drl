@@ -1,0 +1,172 @@
+package rules
+
+
+import sbz.app.model.Racun;
+import sbz.app.model.StavkaRacuna;
+import sbz.app.model.PopustNaStavku;
+import sbz.app.model.PopustNaRacun;
+import sbz.app.model.ProfilKupca;
+import sbz.app.model.AkcijskiDogadjaj;
+import sbz.app.model.KategorijaArtikla;
+import sbz.app.service.KorisnikController;
+
+//Osnovni popusti za stavku
+
+rule "Osnovni popust za vise od 20 stavki koje nisu roba siroke potrosnje"
+	lock-on-active true
+	when
+		$racun: Racun($stavkaRacuna : listaStavki)
+		$stavka: StavkaRacuna(kolicina> 20, !artikal.proveriRobu())
+	then
+		modify($stavka){
+			getListaPopusta().add(new PopustNaStavku(null,null,10, PopustNaStavku.VrstaPopusta.OSNOVNI));
+		}
+		System.out.println("dodat popust od 10% za artikal: "+$stavka.getArtikal().getNaziv());	
+end
+
+rule "Osnovni popust televizori,racunari,laptopovi"
+	lock-on-active true
+	when
+		$racun: Racun($stavkaRacuna : listaStavki)
+		$stavka: StavkaRacuna(kolicina > 5 , ( artikal.proveriKategoriju("Televizori") || artikal.proveriKategoriju("Racunari") || artikal.proveriKategoriju("Laptopovi"))) from $stavkaRacuna
+	then
+		modify($stavka){
+			getListaPopusta().add(new PopustNaStavku(null,null,5, PopustNaStavku.VrstaPopusta.OSNOVNI));
+		}
+		System.out.println("dodat popust od 5% za artikal: "+$stavka.getArtikal().getNaziv());	
+end
+
+rule "Ukupna cena veca od 5000 na robu siroke potrosnje"
+	lock-on-active true
+	when
+		$racun: Racun($stavkaRacuna : listaStavki)
+		$stavka: StavkaRacuna(originalnaUkupnaCenaStavke> 5000, artikal.proveriRobu())
+	then
+		modify($stavka){
+			getListaPopusta().add(new PopustNaStavku(null,null,7, PopustNaStavku.VrstaPopusta.OSNOVNI));
+		}
+		System.out.println("dodat popust od 7% za artikal: "+$stavka.getArtikal().getNaziv());	
+end
+
+//Dodatni popusti za stavku
+//Fale 2 vezana za history
+rule "Akcijski popusti"
+	lock-on-active true
+    when
+       	$racun : Racun($stavkaRacuna : listaStavki, $datum : datum)
+       	$dogadjaj : AkcijskiDogadjaj( pocetak <= $datum && zavrsetak >= $datum, $kategorije : listaKategorija)
+       	$kategorija : KategorijaArtikla() from $kategorije
+       	$stavka : StavkaRacuna(artikal.jeKategorija($kategorija.sifra)) from $stavkaRacuna
+       
+    then
+        modify ($stavka) { 
+        	getListaPopusta().add(new PopustNaStavku(null,null,$dogadjaj.getPopust(), PopustNaStavku.VrstaPopusta.DODATNI));
+        }
+        System.out.println($stavka.getArtikal().getNaziv()+" je pod akcijom "+$dogadjaj.getNaziv()+" vrednosti:  "+$dogadjaj.getPopust());           
+end
+//Odredjivanje ukupnog popusta i finalne cene
+
+
+rule "Odredi osnovni"
+	lock-on-active true
+	when
+		$stavka : StavkaRacuna( $popust : listaPopusta)
+		
+        then
+        	modify ($stavka){
+        	 	setProcenatUmanjenja($stavka.najboljiPopust());	
+        	};
+        	
+        	System.out.println($stavka.getArtikal().getNaziv()+": Osnovni Popust: "+$stavka.getProcenatUmanjenja() );
+end
+
+rule "Konacan Racun print"
+	when
+	then
+		System.out.println("");
+		System.out.println("KONACAN RACUN:");
+end
+		
+
+rule "Saberi osnovni sa dodatnim"
+	lock-on-active true
+	when
+		$stavka : StavkaRacuna( $popust : listaPopusta)
+		$procenat: Double() from accumulate(
+			PopustNaStavku(vrstaPopusta.toString().equals(PopustNaStavku.VrstaPopusta.DODATNI.toString()),$umanjenje: procenatUmanjenja) from $popust,
+			init(double total =0 ),
+            action(total += $umanjenje;),
+            reverse(total -= $umanjenje;),
+            result(total)
+			)
+        then
+        	modify ($stavka){
+        	 	setProcenatUmanjenja(new Float($procenat)+$stavka.getProcenatUmanjenja());
+        	 	
+        	};
+        	modify ($stavka){
+        	 	
+        	 	setKonacnaCenaStavke($stavka.getOriginalnaUkupnaCenaStavke()-($stavka.getOriginalnaUkupnaCenaStavke()*$stavka.getProcenatUmanjenja()/100));
+        	};
+        	System.out.println($stavka.getArtikal().getNaziv()+": Konacna cena: "+$stavka.getKonacnaCenaStavke()+" Popust: "+$stavka.getProcenatUmanjenja()+ " Max Popust:"+$stavka.getArtikal().getKategorija().getMaksimalni_popust() );
+end
+rule "Izmena Racun print"
+	when
+	then
+		System.out.println("");
+		System.out.println("IZMENA RACUNA:");
+end
+
+rule "Proveri maksimalni dozvoljeni popust"
+	lock-on-active true
+	when
+		$stavka : StavkaRacuna(artikal.kategorija.maksimalni_popust<procenatUmanjenja) 
+        then
+        	modify ($stavka){
+        		setProcenatUmanjenja($stavka.getArtikal().getKategorija().getMaksimalni_popust());
+        	};
+        	modify ($stavka){
+        	 	setKonacnaCenaStavke($stavka.getOriginalnaUkupnaCenaStavke()-($stavka.getOriginalnaUkupnaCenaStavke()*$stavka.getProcenatUmanjenja()/100));
+        	};
+        	System.out.println($stavka.getArtikal().getNaziv()+": Izmena max popusta zbog ogranicenja: "+$stavka.getKonacnaCenaStavke()+" Popust: "+$stavka.getProcenatUmanjenja() );
+end
+
+//
+//POPUSTI ZA CELE NARUDZBINE
+//
+
+
+rule "5% za ukupnu cenu preko 200 000 "
+	lock-on-active true
+    when 
+    	$racun : Racun($stavka : listaStavki)
+    	$popust: Number(floatValue >200000) from accumulate(
+			StavkaRacuna($suma : this.getOriginalnaUkupnaCenaStavke()) from $stavka,
+			sum($suma)
+			)
+     then
+     	 modify ($racun) { 
+            getListaPopusta().add(new PopustNaRacun(null, 5, PopustNaRacun.VrstaPopusta.OSNOVNI));
+        }
+        System.out.println("5 % na ukupnu cenu od:"+$popust);
+end
+
+//FALI KUPAC STARIJI OD 2 GODINE
+
+//FALI SREBRNI ILI ZLATNI
+
+/*
+rule "Srebrni ili zlatni kupac"
+	lock-on-active true
+    when 
+      $racun : Racun(kupac.profil_kupca.kategorija.ime_kategorije == "" || kupac.profil_kupca.kategorija.ime_kategorije == "srebrni")
+        
+     then
+     	 modify ($racun) { 
+            getListaPopusta().add(new PopustNaRacun(null, 1, PopustNaRacun.VrstaPopusta.DODATNI));
+        }
+        System.out.println("1% na ukupnu cenu zbog kategorije:"+$racun.getKupac().getProfil_kupca().getKategorija().getIme_kategorije());
+end
+
+*/
+

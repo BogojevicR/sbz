@@ -76,6 +76,10 @@ services.service('appService', ['$http', '$rootScope',
 		return $http.post("http://localhost:8080/menadzer/dogadjaj/izmeni",dogadjaj)
 	}
 	
+	this.kreirajRacun=function(racun){
+		return $http.post("http://localhost:8080/user/racun/create",racun)
+	}
+	
 
 	
 }])

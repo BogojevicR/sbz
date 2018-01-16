@@ -11,6 +11,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import sbz.app.model.PopustNaRacun.VrstaPopusta;
+
 @Entity
 public class StavkaRacuna {
 	
@@ -139,6 +141,33 @@ public class StavkaRacuna {
 
 	public float getKonacnaCenaStavke() {
 		return konacnaCenaStavke;
+	}
+	
+	public float najboljiPopust() {
+		float najbolji=0;
+
+		for(PopustNaStavku popust : this.getListaPopusta()){
+		
+			if(popust.getVrstaPopusta()==PopustNaStavku.VrstaPopusta.OSNOVNI && popust.getProcenatUmanjenja()>najbolji){
+				najbolji=popust.getProcenatUmanjenja();
+			}
+		}
+		return najbolji;
+	}
+	
+	public boolean proveriPopust(){
+		System.out.println(this.getArtikal().getNaziv()+" Kat: "+ this.getArtikal().getKategorija().getNaziv());
+		System.out.println(this.getArtikal().getKategorija().getMaksimalni_popust()>this.procenatUmanjenja);
+		System.out.println(this.getArtikal().getKategorija().getMaksimalni_popust()+"   " +this.procenatUmanjenja);
+		if(this.getArtikal().getKategorija().getMaksimalni_popust()>this.procenatUmanjenja){
+			
+			return true;
+		}
+		return false;
+	}
+	
+	public float getMaxPopust(){
+		return this.getArtikal().getKategorija().getMaksimalni_popust();
 	}
 
 

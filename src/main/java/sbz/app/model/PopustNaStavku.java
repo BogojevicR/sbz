@@ -1,5 +1,7 @@
 package sbz.app.model;
 
+import java.util.UUID;
+
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
@@ -28,10 +30,10 @@ public enum VrstaPopusta {OSNOVNI, DODATNI};
 
 
 
-	public PopustNaStavku(String sifra, Racun racun, StavkaRacuna stavkaRacuna, float procenatUmanjenja,
+	public PopustNaStavku( Racun racun, StavkaRacuna stavkaRacuna, float procenatUmanjenja,
 			VrstaPopusta vrstaPopusta) {
 		super();
-		this.sifra = sifra;
+		this.sifra = UUID.randomUUID().toString().replaceAll("-", "");
 		this.racun = racun;
 		this.stavkaRacuna = stavkaRacuna;
 		this.procenatUmanjenja = procenatUmanjenja;
