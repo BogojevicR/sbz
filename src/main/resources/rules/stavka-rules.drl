@@ -6,9 +6,11 @@ import sbz.app.model.StavkaRacuna;
 import sbz.app.model.PopustNaStavku;
 import sbz.app.model.PopustNaRacun;
 import sbz.app.model.ProfilKupca;
+import sbz.app.model.PragPotrosnje;
 import sbz.app.model.AkcijskiDogadjaj;
 import sbz.app.model.KategorijaArtikla;
 import sbz.app.service.KorisnikController;
+
 
 //Osnovni popusti za stavku
 
@@ -151,15 +153,23 @@ rule "5% za ukupnu cenu preko 200 000 "
         System.out.println("5 % na ukupnu cenu od:"+$popust);
 end
 
-//FALI KUPAC STARIJI OD 2 GODINE
+rule "korisnik je vise od 2 godine 1%"
+	lock-on-active true
+    when 
+    	$racun : Racun( (System.currentTimeMillis() - kupac.getDatum_registrovanja().getTime()) / (365 * 24 * 60 * 60 * 1000)  > 2 )
+        
+     then
+     	 modify ($racun) { 
+            getListaPopusta().add(new PopustNaRacun(null, 1, PopustNaRacun.VrstaPopusta.DODATNI));
+        }
+        System.out.println("1% na ukupnu cenu jer je stari korisnik! ");
+end
 
-//FALI SREBRNI ILI ZLATNI
 
-/*
 rule "Srebrni ili zlatni kupac"
 	lock-on-active true
     when 
-      $racun : Racun(kupac.profil_kupca.kategorija.ime_kategorije == "" || kupac.profil_kupca.kategorija.ime_kategorije == "srebrni")
+      $racun : Racun(kupac.profil_kupca.kategorija.ime_kategorije == "zlatni" || kupac.profil_kupca.kategorija.ime_kategorije == "srebrni")
         
      then
      	 modify ($racun) { 
@@ -168,5 +178,57 @@ rule "Srebrni ili zlatni kupac"
         System.out.println("1% na ukupnu cenu zbog kategorije:"+$racun.getKupac().getProfil_kupca().getKategorija().getIme_kategorije());
 end
 
-*/
+// FALI ONAJ POSLEDNJI STO NE RAZUMEM
+
+
+rule "Sabiranje svih popusta za ceo racun"
+	lock-on-active true
+    when 
+    	$racun : Racun( $popusti : listaPopusta )
+    	$popust : Float() from accumulate(
+    		PopustNaRacun($procenat: procenatUmanjenja) from $popusti,
+            init(float suma = 0;),
+            action(suma += $procenat;),
+            reverse(suma -= $procenat;),
+            result(suma)
+        )
+     then
+     	 modify ($racun) { 
+            setProcenatUmanjenja($popust);
+        }
+        System.out.println("Krajnji popust za ceo racun: "+ $racun.getProcenatUmanjenja());
+end
+
+rule "Sabiranje svih stavki"
+	lock-on-active true
+    when 
+    	$racun : Racun( $stavke : listaStavki )
+    	$total : Double() from accumulate(
+    		StavkaRacuna($cena:konacnaCenaStavke  ) from $stavke,
+            sum($cena)
+        )
+     then
+     	 modify ($racun) { 
+            setKonacnaCena(new Float($total));
+        }
+        modify ($racun) { 
+            setKonacnaCena(new Float($total*((100-$racun.getProcenatUmanjenja())/100))-new Float($racun.getBrojPotrosenihBodova()));
+        } 
+        System.out.println("Konacna cena bez popusta: "+ $total+" , sa popustom: "+$racun.getKonacnaCena());
+end
+
+// ZNAK MANJE NE RADI UOPSTE U 2 PRAVILA
+
+rule "racunanje nagradnih poena"
+	lock-on-active true
+	when
+		$racun : Racun($pragovi : kupac.profil_kupca.kategorija.pragoviPotrosnje)
+		$prag : PragPotrosnje(gornja_granica > $racun.konacnaCena) from $pragovi
+	then
+		modify ($racun) { 
+    	setBrojOstvarenihBodova((int)$racun.getKonacnaCena() * (int)$prag.getProcenat() / 100);
+    } 
+    System.out.println($prag);
+    System.out.println("Korisnik je dobio: "+$racun.getBrojOstvarenihBodova()+" poena!");       
+end
 

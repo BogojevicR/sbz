@@ -1,6 +1,7 @@
 <div >
 
 <h1>Kupac: {{korisnik.username}}</h1>
+<h2>Broj bodova: {{korisnik.profil_kupca.nagradni_bodovi}}</h2>
 <h2>Korpa:<br></h2>
 
 <table id="tabelaArtikla" align="center"  style="width: 90%;"  border = 2 >
@@ -46,7 +47,8 @@
 
 <div align="center">
 	 <br>
-	 <button  type="submit" class="btn btn-primary " ng-click="kreirajRacun()"> Kreiraj Racun</button>
+	 	<input  type="number" style="width: 30%;"   ng-model="brBodova" placeholder="Iskoristi bodove!" ng-change="proveriBodove(brBodova)"  class="form-control"  required = "required" >
+	 	<button  type="submit" class="btn btn-primary " ng-click="kreirajRacun(brBodova)"> Kreiraj Racun</button>
 	 <br>
  </div>
 {{racun}}

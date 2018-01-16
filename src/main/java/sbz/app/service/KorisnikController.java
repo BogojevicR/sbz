@@ -5,6 +5,7 @@ import sbz.app.model.Korisnik;
 import sbz.app.model.Racun;
 import sbz.app.model.StavkaRacuna;
 import sbz.app.repository.AkcijskiDogadjajRepository;
+import sbz.app.repository.KategorijaKupcaRepository;
 import sbz.app.repository.KorisnikRepository;
 import sbz.app.repository.ProfilKupcaRepository;
 import sbz.app.repository.RacunRepository;
@@ -56,6 +57,9 @@ public class KorisnikController {
 	StavkaRacunaRepository stavkaracrep;
 	
 	@Autowired
+	KategorijaKupcaRepository katkuprep;
+	
+	@Autowired
 	AkcijskiDogadjajRepository adrep;
 	
 	@RequestMapping("/all")
@@ -74,7 +78,7 @@ public class KorisnikController {
 			if(rep.findByUsername(user.getUsername())!=null){
 				return false;
 			}else{
-			
+			user.getProfil_kupca().setKategorija(katkuprep.findBySifra("obicni"));
 			user.podesiprofil(user);
 			if(user.getUloga()==Korisnik.Role.KUPAC)
 				profilrep.save(user.getProfil_kupca());
@@ -147,7 +151,7 @@ public class KorisnikController {
 				
 				System.out.println(racun.getListaStavki().get(i).getArtikal().getNaziv()+" :"+racun.getListaStavki().get(i).getListaPopusta());
 			}
-
+			
 			
 			return racun;
 			

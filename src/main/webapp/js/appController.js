@@ -578,7 +578,20 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 		$scope.korpa.splice(index, 1);
 	}
 	
-	$scope.kreirajRacun=function(){
+	$scope.proveriBodove=function(brBodova){
+		if(brBodova>$rootScope.logovan_korisnik.profil_kupca.nagradni_bodovi){
+			alert("Maximalni broj bodova je:"+$rootScope.logovan_korisnik.profil_kupca.nagradni_bodovi)
+			$scope.brBodova=0;
+			$scope.$apply;
+			return
+		}
+	}
+	
+	$scope.kreirajRacun=function(brojBodova){
+		if(brojBodova==""|| brojBodova==null || brojBodova==undefined){
+			brojBodova=0;
+		}
+		
 		var racun=new Object();
 		racun.sifra="sifra";
 		racun.datum= null;
@@ -587,7 +600,7 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 		racun.originalnaCena=0;
 		racun.procenatUmanjenja=0;
 		racun.konacnaCena=0;
-		racun.brojPotrosenihBodova=0;
+		racun.brojPotrosenihBodova=brojBodova;
 		racun.brojOstvarenihBodova=0;
 		
 		racun.listaPopusta=[];
