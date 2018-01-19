@@ -183,6 +183,7 @@ public class KorisnikController {
 			for(PopustNaRacun pr:racun.getListaPopusta()){
 				popustnaracunrep.save(pr);
 			}
+			racun.getKupac().getProfil_kupca().setNagradni_bodovi(racun.getKupac().getProfil_kupca().getNagradni_bodovi()-racun.getBrojPotrosenihBodova());
 			profilrep.save(racun.getKupac().getProfil_kupca());
 			rep.save(racun.getKupac());
 			

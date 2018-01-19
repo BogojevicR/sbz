@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+import org.kie.api.KieServices;
+import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +25,7 @@ import sbz.app.model.KategorijaArtikla;
 import sbz.app.model.KategorijaKupca;
 import sbz.app.model.Korisnik;
 import sbz.app.model.PragPotrosnje;
+import sbz.app.model.ProfilKupca;
 import sbz.app.model.Racun;
 import sbz.app.model.StavkaRacuna;
 import sbz.app.repository.AkcijskiDogadjajRepository;
@@ -30,6 +34,7 @@ import sbz.app.repository.KategorijaArtiklaRepository;
 import sbz.app.repository.KategorijaKupcaRepository;
 import sbz.app.repository.KorisnikRepository;
 import sbz.app.repository.PragPotrosnjeRepository;
+import sbz.app.repository.ProfilKupcaRepository;
 import sbz.app.repository.RacunRepository;
 
 @RestController
@@ -37,6 +42,8 @@ import sbz.app.repository.RacunRepository;
 public class MenadzerController {
 	@Autowired
 	KorisnikRepository rep;
+	@Autowired
+	ProfilKupcaRepository profilrep;
 	@Autowired
 	KategorijaKupcaRepository katkrep;
 	
@@ -282,7 +289,11 @@ public class MenadzerController {
 	public Racun otkaziRacun(@PathVariable String sifra) throws NullPointerException {
 		Racun r=racunrep.findBySifra(sifra);
 		r.setStanje(Racun.StanjeRacuna.OTKAZANO);
+		ProfilKupca pk=r.getKupac().getProfil_kupca();
+		pk.setNagradni_bodovi(r.getKupac().getProfil_kupca().getNagradni_bodovi()+r.getBrojPotrosenihBodova());
+		profilrep.save(pk);
 		racunrep.save(r);
+		rep.save(r.getKupac());
 		return r;
 		
 	}
@@ -292,15 +303,31 @@ public class MenadzerController {
 	public boolean obradiRacun(@PathVariable String sifra) throws NullPointerException {
 		Racun racun=racunrep.findBySifra(sifra);
 		boolean realizacija=true;
+		
 		for(StavkaRacuna s:racun.getListaStavki()){
 			if(s.getKolicina()>s.getArtikal().getBrojnoStanje()){
-				System.out.print("Usao u realizaciju");
-				Artikal a=artrep.findBySifra(s.getArtikal().getSifra());
-				a.setTreba_zaliha(true);
 				realizacija=false;
-				artrep.save(a);
 			}
-		}	
+		}
+		
+		KieServices ks = KieServices.Factory.get();
+		KieContainer kContainer = ks.getKieClasspathContainer();
+		KieSession kSession =  kContainer.newKieSession("porucivanje");
+
+		kSession.insert(racun);
+		kSession.insert(racun.getKupac());
+		for(StavkaRacuna s:racun.getListaStavki()){
+			kSession.insert(s);
+		}
+
+		System.out.println("Porucivanje pravila:");
+		System.out.println(kSession.fireAllRules());
+		System.out.println("Porucivanje zavrseno");
+		
+		for(StavkaRacuna s:racun.getListaStavki()){
+			artrep.save(s.getArtikal());
+		}
+		
 		if(realizacija==true){
 			for(StavkaRacuna s:racun.getListaStavki()){
 				Artikal a=artrep.findBySifra(s.getArtikal().getSifra());
@@ -310,17 +337,28 @@ public class MenadzerController {
 				}
 				artrep.save(a);				
 			}
-		}else{
-			return false;
+			//TODO 1: POPRAVI BODOVE DA IH GUBI KAD KREIRA RACUN A DA MU SE VRACAJU KAD SE OTKAZE
+			racun.setStanje(Racun.StanjeRacuna.REALIZOVANO);
+			Korisnik k=rep.findByUsername(racun.getKupac().getUsername());
+			k.getProfil_kupca().setNagradni_bodovi(k.getProfil_kupca().getNagradni_bodovi()+racun.getBrojOstvarenihBodova());
+			rep.save(k);
+			return true;
 		}
-		System.out.print("NIJE DOSAO OVDE");
-		racun.setStanje(Racun.StanjeRacuna.REALIZOVANO);
-		Korisnik k=rep.findByUsername(racun.getKupac().getUsername());
-		k.getProfil_kupca().setNagradni_bodovi(k.getProfil_kupca().getNagradni_bodovi()-racun.getBrojPotrosenihBodova()+racun.getBrojOstvarenihBodova());
-		rep.save(k);
 		
+		return false;
+	}
+	
+	@RequestMapping(value="/artikal/poruci/{sifra}", method=RequestMethod.GET)
+	@ResponseBody
+	public boolean poruciArtikal(@PathVariable String sifra) throws NullPointerException {
+		Artikal artikal=artrep.findBySifra(sifra);
+		artikal.setBrojnoStanje(artikal.getBrojnoStanje()+10);
+		while(artikal.getBrojnoStanje()<artikal.getMinimalno_stanje()){
+			artikal.setBrojnoStanje(artikal.getBrojnoStanje()+10);
+		}
+		artikal.setTreba_zaliha(false);
+		artrep.save(artikal);
 		
-		racunrep.save(racun);
 		return true;
 		
 	}

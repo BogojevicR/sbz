@@ -4,7 +4,7 @@
         <ksession name="stavka-rules"/>
     </kbase>
     
- <!-- <kbase name="rules2" packages="rules2">
-        <ksession name="ksession-rules-final"/>     
-    </kbase> -->
+  <kbase name="rules2" packages="rules2">
+        <ksession name="porucivanje"/>     
+    </kbase> 
 </kmodule>

@@ -103,6 +103,7 @@
 	      <th>Trebovanje</th>
 	      <th>Status Zapisa</th>
 	      <th>Minimalno</th>
+	      <th>Poruci</th>
 		</tr>
   	</thead>
   	<tbody>
@@ -131,6 +132,11 @@
 			<td style="width: 80%;" align="center" >
 				{{ artikal.minimalno_stanje }}
 			</td>
+			<td style="width: 80%;" align="center" >
+				<button  type="submit" class="btn btn-danger " ng-click="poruciArtikal(artikal.sifra)"> Poruci</button>
+			</td>
+			
+			
 		</tr>
 	</tbody>
 </table>

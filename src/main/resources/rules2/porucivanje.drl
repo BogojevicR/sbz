@@ -1,0 +1,56 @@
+package rules2
+
+import sbz.app.model.Racun;
+import sbz.app.model.StavkaRacuna;
+import sbz.app.model.Artikal;
+
+
+rule "Popuni zalihe "
+	lock-on-active true
+	when
+		$racun: Racun($stavkaRacuna : listaStavki)
+		$stavka: StavkaRacuna(artikal.brojnoStanje<artikal.minimalno_stanje)
+	then
+		modify($stavka){
+			getArtikal().setTreba_zaliha(true);
+		}
+		System.out.println("Treba dopuniti: "+$stavka.getArtikal().getNaziv());
+end
+
+rule "Povuci popunjavanje1 "
+	lock-on-active true
+	when
+		$racun: Racun($stavkaRacuna : listaStavki)
+		$stavka: StavkaRacuna(artikal.brojnoStanje>=artikal.minimalno_stanje)
+	then
+		modify($stavka){
+			getArtikal().setTreba_zaliha(false);
+		}
+		System.out.println("Ne treba dopuniti: "+$stavka.getArtikal().getNaziv());
+end
+
+
+rule "Proveri porudzbinu "
+	lock-on-active true
+	when
+		$racun: Racun($stavkaRacuna : listaStavki)
+		$stavka: StavkaRacuna(artikal.brojnoStanje<kolicina)
+	then
+		modify($stavka){
+			getArtikal().setTreba_zaliha(true);
+		}
+		System.out.println("Potrebne zalihe za: "+$stavka.getArtikal().getNaziv());
+end
+
+rule "Proveri porudzbinu2 "
+	lock-on-active true
+	when
+		$racun: Racun($stavkaRacuna : listaStavki)
+		$stavka: StavkaRacuna(artikal.brojnoStanje>=kolicina)
+	then
+		modify($stavka){
+			getArtikal().setTreba_zaliha(false);
+		}
+		System.out.println("Nije potrebno zaliha: "+$stavka.getArtikal().getNaziv());
+end
+

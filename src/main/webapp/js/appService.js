@@ -94,6 +94,9 @@ services.service('appService', ['$http', '$rootScope',
 	this.obradiRacun=function(sifra){
 		return $http.get("http://localhost:8080/menadzer/racun/obradi/"+sifra) 
 	}
+	this.poruciArtikal=function(sifra){
+		return $http.get("http://localhost:8080/menadzer/artikal/poruci/"+sifra) 
+	}
 
 	
 }])

@@ -691,6 +691,11 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 			return
 		}
 		appService.obradiRacun(racun.sifra).then(function(response){
+			if(response.data==true){
+				alert("Porudzbina je realizovana!")
+			}else{
+				alert("Porudzbina nije moguca, postavljene porudzbine!")
+			}
 			$window.location.href="/#/prodavac"
 			$window.location.reload();
 		})
@@ -701,12 +706,36 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 
 		appService.getAllArtikal().then(function(response){
 			angular.forEach(response.data,function(value,index){
-	            if(value.treba_zaliha==true){
+	            if(value.treba_zaliha==true){	        
 	            	$scope.porudzbine.push(value)	     
 	            }
 	        })
 
 		})	
+	}
+	
+	$scope.poruciArtikal=function(sifra){
+		appService.poruciArtikal(sifra).then(function(reponse){
+			if(reponse.data==true){
+				alert("Porudzbina je obavljena!")
+				angular.forEach($scope.porudzbine,function(value,index){
+				      if(value.sifra==sifra){
+			            	var index=$scope.porudzbine.indexOf(value);
+			        		$scope.porudzbine.splice(index, 1);	  
+			        		$scope.$apply;
+			        		$window.location.href="/#/prodavac"
+							$window.location.reload();
+			            }
+			        })
+					
+				
+				}else{
+				alert("Porudzbina nije obavljena!")
+				$window.location.href="/#/prodavac"
+				$window.location.reload();
+			}
+		})
+		
 	}
 	
 	
