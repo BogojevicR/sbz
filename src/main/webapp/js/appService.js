@@ -80,6 +80,11 @@ services.service('appService', ['$http', '$rootScope',
 		return $http.post("http://localhost:8080/user/racun/create",racun)
 	}
 	
+	this.getRacunBySifra=function(sifra){
+		return $http.get("http://localhost:8080/menadzer/racun/"+sifra)
+	}
+	
+	
 
 	
 }])

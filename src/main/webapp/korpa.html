@@ -51,5 +51,110 @@
 	 	<button  type="submit" class="btn btn-primary " ng-click="kreirajRacun(brBodova)"> Kreiraj Racun</button>
 	 <br>
  </div>
-{{racun}}
+
+
+<table id="tabelaRacuna" align="center"  style="width: 90%;"  border = 2 >
+	<thead>
+		<tr align="center">
+			<th>Originalna Cena</th>
+		    <th>Procenat Umanjenja</th>
+		    <th>Konacna Cena</th>
+		    <th>Broj Potrosenih Bodova</th> 
+		    <th>Broj Ostvarenih Bodova</th>
+		    <th>Popusti na racun</th>
+		    <th>Stavke</th>
+		</tr>
+  	</thead>
+  	<tbody>
+		<tr>
+
+			<td style="width: 30%;" align="center" >
+				{{  racun.originalnaCena }}
+			</td>
+			<td style="width: 30%;" align="center" >
+				{{  racun.procenatUmanjenja }}
+			</td>
+			<td style="width: 30%;" align="center" >
+				{{  racun.konacnaCena }}
+			</td>
+			<td style="width: 30%;" align="center" >
+			    {{ racun.brojPotrosenihBodova}}
+			</td>
+			<td style="width: 30%;" align="center" >
+			    {{ racun.brojOstvarenihBodova}}
+			</td>
+			<td  align="center" >
+			    <table id="tabelaPopusta" align="center"  style="width: 90%;"  border = 1 >
+					<thead>
+						<tr align="center">
+					     	<th>Procenat Umanjenja</th>
+							<th>Vrsta Popusta</th>
+						</tr>
+				  	</thead>
+				  	<tbody>
+						<tr ng-repeat="popust in racun.listaPopusta  ">
+							<td style="width: 30%;" align="center" >
+								{{ popust.procenatUmanjenja}}
+							</td>
+							
+							<td style="width: 30%;" align="center" >
+								{{  popust.vrstaPopusta }}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+			<td  align="center" >
+			    <table id="tabelaStavki" align="center"  style="width: 90%;"  border = 1 >
+					<thead>
+						<tr align="center">
+					     	<th>Naziv</th>
+							<th>Kolicina</th>
+						    <th>Konacna cena</th>
+						    <th>Popusti na Stavku</th>  
+						</tr>
+				  	</thead>
+				  	<tbody>
+						<tr ng-repeat="stavka in racun.listaStavki  ">
+							<td style="width: 30%;" align="center" >
+								{{ stavka.artikal.naziv }}
+							</td>
+							
+							<td style="width: 30%;" align="center" >
+								{{  stavka.kolicina }}
+							</td>				
+							<td style="width: 30%;" align="center" >
+							    {{ stavka.konacnaCenaStavke}}
+							</td>
+							<td  align="center" >
+			    <table id="tabelaPopustanaStavku" align="center"  style="width: 90%;"  border = 1 >
+					<thead>
+						<tr align="center">
+					     	<th>Procenat Umanjenja</th>
+							<th>Vrsta Popusta</th>
+						</tr>
+				  	</thead>
+				  	<tbody>
+						<tr ng-repeat="popuststavka in stavka.listaPopusta  ">
+							<td style="width: 30%;" align="center" >
+								{{ popuststavka.procenatUmanjenja}}
+							</td>
+							
+							<td style="width: 30%;" align="center" >
+								{{  popuststavka.vrstaPopusta }}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+
+
 </div>

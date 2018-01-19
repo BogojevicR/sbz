@@ -169,12 +169,10 @@ public class Racun {
 		for(StavkaRacuna sr: racun.getListaStavki()){
 			sr.setId(UUID.randomUUID().toString().replaceAll("-", ""));
 		//	sr.setRacun(racun);
-			
+			racun.originalnaCena+=racun.originalnaCena+sr.getCena();
 		} 
 		
 	}
-	
-	
 	
 	
 	//TODO 2: Popravi relacije u bazi

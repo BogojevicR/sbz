@@ -2,11 +2,15 @@ package sbz.app.service;
 import sbz.app.Application;
 import sbz.app.model.AkcijskiDogadjaj;
 import sbz.app.model.Korisnik;
+import sbz.app.model.PopustNaRacun;
+import sbz.app.model.PopustNaStavku;
 import sbz.app.model.Racun;
 import sbz.app.model.StavkaRacuna;
 import sbz.app.repository.AkcijskiDogadjajRepository;
 import sbz.app.repository.KategorijaKupcaRepository;
 import sbz.app.repository.KorisnikRepository;
+import sbz.app.repository.PopustNaRacunRepository;
+import sbz.app.repository.PopustNaStavkuRepository;
 import sbz.app.repository.ProfilKupcaRepository;
 import sbz.app.repository.RacunRepository;
 import sbz.app.repository.StavkaRacunaRepository;
@@ -55,6 +59,10 @@ public class KorisnikController {
 	RacunRepository racunrep;
 	@Autowired
 	StavkaRacunaRepository stavkaracrep;
+	@Autowired
+	PopustNaStavkuRepository popustnastavkurep;
+	@Autowired
+	PopustNaRacunRepository popustnaracunrep;
 	
 	@Autowired
 	KategorijaKupcaRepository katkuprep;
@@ -146,11 +154,30 @@ public class KorisnikController {
 			System.out.println("Sistem za popuste je poceo obradu!");
 			System.out.println(kSession.fireAllRules());
 			System.out.println("Sistem je zavrsio obradu! ");
+			Korisnik k=racun.getKupac();
+			
+			racun.getKupac().getProfil_kupca().getIstorija_kupovina().add(racun.getSifra());
 			
 			for(int i=0; i<racun.getListaStavki().size(); i++) {
 				
 				System.out.println(racun.getListaStavki().get(i).getArtikal().getNaziv()+" :"+racun.getListaStavki().get(i).getListaPopusta());
+				for(PopustNaStavku ps:racun.getListaStavki().get(i).getListaPopusta()){
+					popustnastavkurep.save(ps);
+				}
+				stavkaracrep.save(racun.getListaStavki().get(i));
+			
 			}
+			
+			for(PopustNaRacun pr:racun.getListaPopusta()){
+				popustnaracunrep.save(pr);
+			}
+			profilrep.save(racun.getKupac().getProfil_kupca());
+			rep.save(racun.getKupac());
+			
+			racunrep.save(racun);
+			
+			
+		
 			
 			
 			return racun;

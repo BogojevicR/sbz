@@ -169,7 +169,7 @@ public class Korisnik implements Serializable{
 		
 		korisnik.setDatum_registrovanja(date);
 		if(korisnik.getUloga()==Korisnik.Role.KUPAC){
-			korisnik.getProfil_kupca().setIstorija_kupovina(new ArrayList<Racun>());
+			korisnik.getProfil_kupca().setIstorija_kupovina(new ArrayList<String>());
 		}else{
 			korisnik.setProfil_kupca(null);
 		}

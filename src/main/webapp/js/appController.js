@@ -23,6 +23,7 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 				if(localStorage.getItem("uloga")=="KUPAC"){
 					$("#profileBtn").show();
 					$("#korpaBtn").show();
+					
 				}else{
 					$("#profileBtn").hide();
 					$("#korpaBtn").hide();
@@ -151,6 +152,23 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 			$rootScope.kategorije_kupca=response.data;
 		})	
 	}
+	
+	$scope.getIstorijeKupovina=function(){
+		$scope.istorijaKupovina=[]
+		angular.forEach($rootScope.logovan_korisnik.profil_kupca.istorija_kupovina,function(value,index){
+			appService.getRacunBySifra(value).then(function(response){
+				$scope.istorijaKupovina.push(response.data);
+			})
+		})
+	}
+
+
+	
+	
+	
+
+	
+	
 	//Azuriranje kategorije kupca
 	$scope.azurirajKategoriju_kupca= function(ime_kategorije_kupca){
 		appService.getKatKupcaBySifra(ime_kategorije_kupca).then(function(response){
@@ -281,7 +299,7 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 		})
 	}
 	//Dodaj novi artikal
-	$scope.dodajArtikal=function(nazivA,cenaA,kateg,stanjeA,minimumA){
+	$scope.kreirajArtikal=function(nazivA,cenaA,kateg,stanjeA,minimumA){
 		ArtikalJSON={
 				sifra: kateg.sifra,
 				naziv: nazivA,
@@ -628,14 +646,14 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 		
 		appService.kreirajRacun(racun).then(function(response){
 		
-			console.log(response.data);
-		/*	if(response.data==false){
-				alert("Greska Pokusajte ponovo!")
-			}else{
-			
-				$location.path('/menadzer')
-				window.location.reload(); 
-			} */
+				console.log(response.data);
+				if(response.data==false){
+					alert("Greska Pokusajte ponovo!")
+				}else{
+					$scope.racun=response.data;
+					$scope.$apply;
+
+				} 
 		})
 		console.log(racun);
 		

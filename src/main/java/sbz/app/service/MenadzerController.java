@@ -22,11 +22,13 @@ import sbz.app.model.KategorijaArtikla;
 import sbz.app.model.KategorijaKupca;
 import sbz.app.model.Korisnik;
 import sbz.app.model.PragPotrosnje;
+import sbz.app.model.Racun;
 import sbz.app.repository.AkcijskiDogadjajRepository;
 import sbz.app.repository.ArtikalRepository;
 import sbz.app.repository.KategorijaArtiklaRepository;
 import sbz.app.repository.KategorijaKupcaRepository;
 import sbz.app.repository.PragPotrosnjeRepository;
+import sbz.app.repository.RacunRepository;
 
 @RestController
 @RequestMapping("/menadzer")
@@ -45,6 +47,9 @@ public class MenadzerController {
 	
 	@Autowired
 	AkcijskiDogadjajRepository dogrep;
+	
+	@Autowired
+	RacunRepository racunrep;
 	
 	@RequestMapping("/all/katKupca")
 	@ResponseBody
@@ -250,6 +255,14 @@ public class MenadzerController {
 				dogrep.save(dog);
 				return true;
 			}
+	}
+	
+	@RequestMapping(value="/racun/{sifra}", method=RequestMethod.GET)
+	@ResponseBody
+	public Racun getRacunBySifra(@PathVariable String sifra) throws NullPointerException {
+		Racun r=racunrep.findBySifra(sifra);
+		return r;
+		
 	}
 	
 	

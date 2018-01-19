@@ -1,4 +1,4 @@
-<div >
+<div ng-init="getIstorijeKupovina();">
 
 <h1>Profil Kupca: {{korisnik.username}}</h1>
 <h2>Ime:{{korisnik.ime}}<br></h2>
@@ -7,5 +7,88 @@
 <h2>Adresa isporuke:{{korisnik.profil_kupca.adresa}}<br></h2>
 <h2>Nagradni bodovi:{{korisnik.profil_kupca.nagradni_bodovi}}<br></h2>
 <h2>Kategorija:{{korisnik.profil_kupca.kategorija.ime_kategorije}}<br></h2>
-<h2>Istorija kupovina:{{korisnik.profil_kupca.istorija_kupovina}}<br></h2>
+<h2>Istorija kupovina:<br></h2>
+	
+<table id="tabelaRacuna" align="center"  style="width: 90%;"  border = 2 >
+	<thead>
+		<tr align="center">
+			<th>Sifra</th>
+	     	<th>Stanje</th>
+			<th>Originalna Cena</th>
+		    <th>Procenat Umanjenja</th>
+		    <th>Konacna Cena</th>
+		    <th>Broj Potrosenih Bodova</th> 
+		    <th>Broj Ostvarenih Bodova</th> 
+		    <th>Stavke</th>
+		</tr>
+  	</thead>
+  	<tbody>
+		<tr ng-repeat="racun in istorijaKupovina  ">
+			<td style="width: 30%;" align="center" >
+				{{ racun.sifra }}
+			</td>
+			
+			<td style="width: 30%;" align="center" >
+				{{  racun.stanje }}
+			</td>
+			<td style="width: 30%;" align="center" >
+				{{  racun.originalnaCena }}
+			</td>
+			<td style="width: 30%;" align="center" >
+				{{  racun.procenatUmanjenja }}
+			</td>
+			<td style="width: 30%;" align="center" >
+				{{  racun.konacnaCena }}
+			</td>
+			<td style="width: 30%;" align="center" >
+			    {{ racun.brojPotrosenihBodova}}
+			</td>
+			<td style="width: 30%;" align="center" >
+			    {{ racun.brojOstvarenihBodova}}
+			</td>
+			<td " align="center" >
+			    <table id="tabelaStavki" align="center"  style="width: 90%;"  border = 1 >
+					<thead>
+						<tr align="center">
+					     	<th>Naziv</th>
+							<th>Kolicina</th>
+						    <th>Cena</th>
+						    <th>Originalna ukupna cena</th>
+						    <th>Procenat popusta</th> 
+						    <th>Konacna cena</th>  
+						</tr>
+				  	</thead>
+				  	<tbody>
+						<tr ng-repeat="stavka in racun.listaStavki  ">
+							<td style="width: 30%;" align="center" >
+								{{ stavka.artikal.naziv }}
+							</td>
+							
+							<td style="width: 30%;" align="center" >
+								{{  stavka.kolicina }}
+							</td>
+							<td style="width: 30%;" align="center" >
+								{{   stavka.cena }}
+							</td>
+							<td style="width: 30%;" align="center" >
+								{{  stavka.originalnaUkupnaCenaStavke }}
+							</td>
+							<td style="width: 30%;" align="center" >
+								{{  stavka.procenatUmanjenja }}
+							</td>
+							<td style="width: 30%;" align="center" >
+							    {{ stavka.konacnaCenaStavke}}
+							</td>
+				
+							
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+
+
 </div>

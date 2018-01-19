@@ -29,8 +29,8 @@ public class ProfilKupca {
 	private KategorijaKupca kategorija;
 	//TODO 00: MOZDA TREBA OVDE TARGET ENTITY I OSTALI PARAMETRI KOD SVIH ANOTACIJA
 	@Column(name="istorija_kupovina")
-	@OneToMany
-	private List<Racun> istorija_kupovina = new ArrayList<Racun>();
+	@ElementCollection
+	private List<String> istorija_kupovina = new ArrayList<String>();
 
 	
 	
@@ -43,7 +43,7 @@ public class ProfilKupca {
 	
 
 	public ProfilKupca(String sifra, String adresa, int nagradni_bodovi, KategorijaKupca kategorija,
-			List<Racun> istorija_kupovina) {
+			List<String> istorija_kupovina) {
 		super();
 		this.sifra = sifra;
 		this.adresa = adresa;
@@ -110,14 +110,14 @@ public class ProfilKupca {
 
 
 
-	public List<Racun> getIstorija_kupovina() {
+	public List<String> getIstorija_kupovina() {
 		return istorija_kupovina;
 	}
 
 
 
 
-	public void setIstorija_kupovina(List<Racun> istorija_kupovina) {
+	public void setIstorija_kupovina(List<String> istorija_kupovina) {
 		this.istorija_kupovina = istorija_kupovina;
 	}
 
