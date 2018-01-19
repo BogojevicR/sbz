@@ -116,6 +116,18 @@ public class KorisnikController {
 		
 	}
 	
+	@RequestMapping(value="/getHistory/{username}", method=RequestMethod.GET)
+	public List<Racun> getShoppingHistory(@PathVariable  String username) throws JsonParseException, JsonMappingException, IOException, JsonMappingException, IOException{
+		List<Racun> history=new ArrayList<Racun>();
+		Korisnik k=rep.findByUsername(username);
+		for(String sifra:k.getProfil_kupca().getIstorija_kupovina()){
+			history.add(racunrep.findBySifra(sifra));
+		}
+		
+		return history;
+	
+	}
+	
 	
 	@RequestMapping(value="/racun/create", method=RequestMethod.POST)
 	public Racun kreirajRacun(@RequestBody final String userString) throws JsonParseException, JsonMappingException, IOException, JsonMappingException, IOException{
@@ -175,19 +187,7 @@ public class KorisnikController {
 			rep.save(racun.getKupac());
 			
 			racunrep.save(racun);
-			
-			
-		
-			
-			
 			return racun;
-			
-		/*	if(dogrep.findBySifra(dog.getSifra())!=null){
-				return false;
-			}else{
-				dogrep.save(dog);
-				return true;
-			} */
 	}
 	
 	

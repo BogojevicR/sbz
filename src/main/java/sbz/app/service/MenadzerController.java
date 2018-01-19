@@ -23,16 +23,20 @@ import sbz.app.model.KategorijaKupca;
 import sbz.app.model.Korisnik;
 import sbz.app.model.PragPotrosnje;
 import sbz.app.model.Racun;
+import sbz.app.model.StavkaRacuna;
 import sbz.app.repository.AkcijskiDogadjajRepository;
 import sbz.app.repository.ArtikalRepository;
 import sbz.app.repository.KategorijaArtiklaRepository;
 import sbz.app.repository.KategorijaKupcaRepository;
+import sbz.app.repository.KorisnikRepository;
 import sbz.app.repository.PragPotrosnjeRepository;
 import sbz.app.repository.RacunRepository;
 
 @RestController
 @RequestMapping("/menadzer")
 public class MenadzerController {
+	@Autowired
+	KorisnikRepository rep;
 	@Autowired
 	KategorijaKupcaRepository katkrep;
 	
@@ -262,6 +266,62 @@ public class MenadzerController {
 	public Racun getRacunBySifra(@PathVariable String sifra) throws NullPointerException {
 		Racun r=racunrep.findBySifra(sifra);
 		return r;
+		
+	}
+	
+	@RequestMapping("/all/racun")
+	@ResponseBody
+	public  List<Racun> getRacune(){
+		
+		return racunrep.findAll();
+		
+	}
+	
+	@RequestMapping(value="/racun/otkazi/{sifra}", method=RequestMethod.GET)
+	@ResponseBody
+	public Racun otkaziRacun(@PathVariable String sifra) throws NullPointerException {
+		Racun r=racunrep.findBySifra(sifra);
+		r.setStanje(Racun.StanjeRacuna.OTKAZANO);
+		racunrep.save(r);
+		return r;
+		
+	}
+	
+	@RequestMapping(value="/racun/obradi/{sifra}", method=RequestMethod.GET)
+	@ResponseBody
+	public boolean obradiRacun(@PathVariable String sifra) throws NullPointerException {
+		Racun racun=racunrep.findBySifra(sifra);
+		boolean realizacija=true;
+		for(StavkaRacuna s:racun.getListaStavki()){
+			if(s.getKolicina()>s.getArtikal().getBrojnoStanje()){
+				System.out.print("Usao u realizaciju");
+				Artikal a=artrep.findBySifra(s.getArtikal().getSifra());
+				a.setTreba_zaliha(true);
+				realizacija=false;
+				artrep.save(a);
+			}
+		}	
+		if(realizacija==true){
+			for(StavkaRacuna s:racun.getListaStavki()){
+				Artikal a=artrep.findBySifra(s.getArtikal().getSifra());
+				a.setBrojnoStanje(a.getBrojnoStanje()-s.getKolicina());
+				if(a.getBrojnoStanje()<a.getMinimalno_stanje()){
+					a.setTreba_zaliha(true);
+				}
+				artrep.save(a);				
+			}
+		}else{
+			return false;
+		}
+		System.out.print("NIJE DOSAO OVDE");
+		racun.setStanje(Racun.StanjeRacuna.REALIZOVANO);
+		Korisnik k=rep.findByUsername(racun.getKupac().getUsername());
+		k.getProfil_kupca().setNagradni_bodovi(k.getProfil_kupca().getNagradni_bodovi()-racun.getBrojPotrosenihBodova()+racun.getBrojOstvarenihBodova());
+		rep.save(k);
+		
+		
+		racunrep.save(racun);
+		return true;
 		
 	}
 	

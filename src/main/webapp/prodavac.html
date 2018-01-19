@@ -1,0 +1,142 @@
+<div ng-init="prodavac()">
+
+<h2>Lista Racuna:<br></h2>
+<h3 align="center">
+<label class="radio-inline">
+<input type="radio" ng-model="test" value="" ng-checked="true">Sve
+</label>
+<label class="radio-inline">
+<input type="radio" ng-model="test" value="PORUCENO">Poruceno
+</label>
+<label class="radio-inline">
+<input type="radio" ng-model="test" value="OTKAZANO">Otkazano
+</label>
+<label class="radio-inline">
+<input type="radio" ng-model="test" value="REALIZOVANO">Realizovano
+</label></h3>
+<table id="tabelaRacuna" align="center"  style="width: 90%;"  border = 2 >
+	<thead>
+		<tr align="center">
+			<th>Sifra</th>
+	     	<th>Stanje</th>
+			<th>Originalna Cena</th>
+		    <th>Procenat Umanjenja</th>
+		    <th>Konacna Cena</th>
+		    <th>Broj Potrosenih Bodova</th> 
+		    <th>Broj Ostvarenih Bodova</th> 
+		    <th>Stavke</th>
+		    <th>Opcije</th>
+		</tr>
+  	</thead>
+  	<tbody>
+		<tr ng-repeat="racun in racuni | filter:test ">
+			<td style="width: 30%;" align="center" >
+				{{ racun.sifra }}
+			</td>
+			<td style="width: 30%;" align="center" >
+				{{  racun.stanje }}
+			</td>
+			<td style="width: 30%;" align="center" >
+				{{  racun.originalnaCena }}
+			</td>
+			<td style="width: 30%;" align="center" >
+				{{  racun.procenatUmanjenja }}
+			</td>
+			<td style="width: 30%;" align="center" >
+				{{  racun.konacnaCena }}
+			</td>
+			<td style="width: 30%;" align="center" >
+			    {{ racun.brojPotrosenihBodova}}
+			</td>
+			<td style="width: 30%;" align="center" >
+			    {{ racun.brojOstvarenihBodova}}
+			</td>
+			<td " align="center" >
+			    <table id="tabelaStavki" align="center"  style="width: 90%;"  border = 1 >
+					<thead>
+						<tr align="center">
+					     	<th>Naziv</th>
+							<th>Kolicina</th>
+							<th>Cena</th>
+						</tr>
+				  	</thead>
+				  	<tbody>
+						<tr ng-repeat="stavka in racun.listaStavki  ">
+							<td style="width: 30%;" align="center" >
+								{{ stavka.artikal.naziv }}
+							</td>
+							
+							<td style="width: 30%;" align="center" >
+								{{  stavka.kolicina }}
+							</td>
+							<td style="width: 30%;" align="center" >
+								{{   stavka.cena }}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+			<td style="width: 30%;" align="center" >
+				<table>
+					<tr>
+						<button  type="submit" class="btn btn-primary " ng-click="obradiRacun(racun)"> Obradi</button>
+					</tr>
+					<tr>
+						<button  type="submit" class="btn btn-danger " ng-click="otkaziRacun(racun)"> Otkazi</button>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<h2 align="center">Porudzbine:</h2>
+  
+ <table id="tablePorduzbina" align="center"  style="width: 70%;" border = 1 >
+	<thead >
+		<tr align="center">
+	      <th  >Naziv</th>
+	      <th >Kategorija</th>
+	      <th >Cena</th>
+	      <th >Brojno Stanje</th>
+	      <th>Datum</th>
+	      <th>Trebovanje</th>
+	      <th>Status Zapisa</th>
+	      <th>Minimalno</th>
+		</tr>
+  	</thead>
+  	<tbody>
+		<tr align="center" ng-repeat="artikal in porudzbine track by $index">
+			<td style="width: 80%;" align="center" >
+				{{ artikal.naziv }}
+			</td>
+			<td style="width: 80%;" align="center" >
+				{{ artikal.kategorija.naziv }}
+			</td>
+			<td style="width: 80%;" align="center" >
+				{{ artikal.cena }}
+			</td>
+			<td style="width: 80%;" align="center" >
+				{{ artikal.brojnoStanje }}
+			</td>
+			<td ng-init="loadDatum(artikal.datum_kreiranja)" ng-  style="width: 100%;" align="center" >
+				<div  >{{ artikal.datum_kreiranja }}</div>
+			</td>
+			<td style="width: 80%;" align="center" >
+				{{ artikal.treba_zaliha }}
+			</td>
+			<td style="width: 80%;" align="center" >
+				{{ artikal.status_zapisa }}
+			</td>
+			<td style="width: 80%;" align="center" >
+				{{ artikal.minimalno_stanje }}
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+
+
+
+
+</div>

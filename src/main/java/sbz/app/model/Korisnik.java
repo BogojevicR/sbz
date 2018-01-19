@@ -1,10 +1,13 @@
 package sbz.app.model;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -20,6 +23,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import requests.Requests;
+import sbz.app.repository.RacunRepository;
 
 
 @Entity
@@ -174,8 +186,7 @@ public class Korisnik implements Serializable{
 			korisnik.setProfil_kupca(null);
 		}
 	}
-
-
+	
 
 
 	@Override
@@ -184,20 +195,5 @@ public class Korisnik implements Serializable{
 				+ ", uloga=" + uloga + ", datum_registrovanja=" + datum_registrovanja + ", profil_kupca=" + profil_kupca
 				+ "]";
 	}
-
-
-
-
-	
-
-
-	
-
-
-	
-	
-	
-	
-	
 	
 }

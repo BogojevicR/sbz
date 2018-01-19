@@ -52,6 +52,22 @@ end
 
 //Dodatni popusti za stavku
 //Fale 2 vezana za history
+/*
+rule "2% ako je artikal kupovan poslednjih 15 dana"
+	lock-on-active true
+    when
+       	$racun : Racun($stavke : listaStavki)
+       	$stavka : StavkaRacuna(this.kupovina15($racun.getKupac()) == true) from $stavke
+    then
+        modify ($stavka) { 
+            getListaPopusta().add(new PopustNaStavku(null, null, 2, PopustNaStavku.VrstaPopusta.DODATNI));
+        }
+        System.out.println("Kupovan u predhodnih 15 dana  " + $stavka.getArtikal().getNaziv());
+           
+end
+*/
+
+
 rule "Akcijski popusti"
 	lock-on-active true
     when

@@ -1,6 +1,9 @@
 package sbz.app.model;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.ElementCollection;
@@ -11,9 +14,13 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.codehaus.jackson.map.ObjectMapper;
+
+import requests.Requests;
 import sbz.app.model.PopustNaRacun.VrstaPopusta;
 
 @Entity
+
 public class StavkaRacuna {
 	
 	
@@ -183,6 +190,29 @@ public class StavkaRacuna {
 
 	public void setListaPopusta(List<PopustNaStavku> listaPopusta) {
 		this.listaPopusta = listaPopusta;
+	}
+	
+	public boolean kupovina15(Korisnik k) throws  IOException{
+		String historylista = new Requests().makeGetRequest("http://localhost:8080/user/getHistory/"+k.getUsername());
+		Racun[] pojos = new ObjectMapper().readValue(historylista, Racun[].class);
+		List<Racun> history = Arrays.asList(pojos);
+		
+		
+		Date danas = new Date();
+		
+		for(Racun racun : history){
+			for(StavkaRacuna sr : racun.getListaStavki()){
+				if(sr.getArtikal().getSifra().equals(artikal.getSifra())){
+					if((System.currentTimeMillis() - racun.getDatum().getTime()) / (1000d) < 15){
+						return true;
+					}
+					
+				}
+			}
+		}
+		
+		return false;
+		
 	}
 
 

@@ -20,6 +20,10 @@ app.config(function($stateProvider,$urlRouterProvider) {
 		url:'/menadzer',
 		templateUrl:'/menadzer.html',
 		controller:'appController'	
+	}).state('prodavac',{
+		url:'/prodavac',
+		templateUrl:'/prodavac.html',
+		controller:'appController'	
 	})
 	.state('azuriraj_kategoriju_kupca',{
 		url:'/azuriraj_kategoriju_kupca',

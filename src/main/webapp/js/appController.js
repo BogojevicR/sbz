@@ -96,7 +96,11 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 					$window.location.href = "/#/menadzer"
 					window.location.reload();
 					$scope.$apply;
-				}else{
+				}if(localStorage.getItem("uloga")=="PRODAVAC"){
+					$window.location.href = "/#/prodavac"
+						window.location.reload();
+						$scope.$apply;
+					}else{
 					$window.location.href = ""
 					$scope.$apply;
 				}
@@ -456,7 +460,7 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 			if(localStorage.getItem("uloga")=="MENADZER"){
 				$location.path('/menadzer')
 			}if(localStorage.getItem("uloga")=="PRODAVAC"){
-				$location.path('/menadzer')
+				$location.path('/prodavac')
 			}
 		}
 	}
@@ -657,7 +661,56 @@ app.controller('appController', ['$http','$window','$location','$rootScope','$sc
 		})
 		console.log(racun);
 		
-	}	
+	}
+	$scope.prodavac=function(){
+		$scope.getRacune();
+		$scope.getPorudzbine();
+	}
+	
+	$scope.getRacune=function(){
+		appService.getRacune().then(function(response){
+			$scope.racuni=response.data;
+		})
+	}
+	
+	$scope.otkaziRacun=function(racun){
+		if(racun.stanje=="REALIZOVANO" || racun.stanje=="OTKAZANO"){
+			alert("Stanje racuna mora biti PORUCENO da bi se racun otkazao!")
+			return
+		}
+		appService.otkaziRacun(racun.sifra).then(function(response){
+			$window.location.href = "/#/prodavac"
+			$window.location.reload();
+				
+		})
+	}
+	
+	$scope.obradiRacun=function(racun){
+		if(racun.stanje=="REALIZOVANO" || racun.stanje=="OTKAZANO"){
+			alert("Stanje racuna mora biti PORUCENO da bi se racun realizovao!")
+			return
+		}
+		appService.obradiRacun(racun.sifra).then(function(response){
+			$window.location.href="/#/prodavac"
+			$window.location.reload();
+		})
+	}
+	
+	$scope.getPorudzbine = function(){
+		$scope.porudzbine=[];
+
+		appService.getAllArtikal().then(function(response){
+			angular.forEach(response.data,function(value,index){
+	            if(value.treba_zaliha==true){
+	            	$scope.porudzbine.push(value)	     
+	            }
+	        })
+
+		})	
+	}
+	
+	
+	
 }
 ])
 
