@@ -35,6 +35,7 @@ import sbz.app.repository.RacunRepository;
 
 
 @Entity
+@com.fasterxml.jackson.annotation.JsonIgnoreProperties(ignoreUnknown=true)
 public class Korisnik implements Serializable{
 	public enum Role {KUPAC, MENADZER, PRODAVAC };
 	@Id

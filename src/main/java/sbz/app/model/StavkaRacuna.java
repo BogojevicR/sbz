@@ -14,13 +14,20 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.ObjectMapper;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import requests.Requests;
 import sbz.app.model.PopustNaRacun.VrstaPopusta;
 
-@Entity
 
+
+
+@Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class StavkaRacuna {
 	
 	
@@ -192,18 +199,37 @@ public class StavkaRacuna {
 		this.listaPopusta = listaPopusta;
 	}
 	
-	public boolean kupovina15(Korisnik k) throws  IOException{
+	public boolean kupovina15(Korisnik k) throws JsonParseException, JsonMappingException, IOException, JsonMappingException, IOException{
 		String historylista = new Requests().makeGetRequest("http://localhost:8080/user/getHistory/"+k.getUsername());
 		Racun[] pojos = new ObjectMapper().readValue(historylista, Racun[].class);
 		List<Racun> history = Arrays.asList(pojos);
-		
-		
 		Date danas = new Date();
 		
 		for(Racun racun : history){
 			for(StavkaRacuna sr : racun.getListaStavki()){
 				if(sr.getArtikal().getSifra().equals(artikal.getSifra())){
-					if((System.currentTimeMillis() - racun.getDatum().getTime()) / (1000d) < 15){
+					if((System.currentTimeMillis() - racun.getDatum().getTime()) / (1000*60) < 15){
+						return true;
+					}
+					
+				}
+			}
+		}
+		
+		return false;
+		
+	}
+	
+	public boolean kupovina30(Korisnik k) throws JsonParseException, JsonMappingException, IOException, JsonMappingException, IOException{
+		String historylista = new Requests().makeGetRequest("http://localhost:8080/user/getHistory/"+k.getUsername());
+		Racun[] pojos = new ObjectMapper().readValue(historylista, Racun[].class);
+		List<Racun> history = Arrays.asList(pojos);
+		Date danas = new Date();
+		
+		for(Racun racun : history){
+			for(StavkaRacuna sr : racun.getListaStavki()){
+				if(sr.getArtikal().getKategorija().getSifra().equals(artikal.getKategorija().getSifra())){
+					if((System.currentTimeMillis() - racun.getDatum().getTime()) / (1000*60) < 30){
 						return true;
 					}
 					

@@ -52,12 +52,12 @@ end
 
 //Dodatni popusti za stavku
 //Fale 2 vezana za history
-/*
+
 rule "2% ako je artikal kupovan poslednjih 15 dana"
 	lock-on-active true
     when
        	$racun : Racun($stavke : listaStavki)
-       	$stavka : StavkaRacuna(this.kupovina15($racun.getKupac()) == true) from $stavke
+       	$stavka : StavkaRacuna(kupovina15($racun.getKupac()) == true) from $stavke
     then
         modify ($stavka) { 
             getListaPopusta().add(new PopustNaStavku(null, null, 2, PopustNaStavku.VrstaPopusta.DODATNI));
@@ -65,7 +65,20 @@ rule "2% ako je artikal kupovan poslednjih 15 dana"
         System.out.println("Kupovan u predhodnih 15 dana  " + $stavka.getArtikal().getNaziv());
            
 end
-*/
+
+rule "1% ako je artikal iz kategorije kupovan poslednjih 30 dana"
+	lock-on-active true
+    when
+       	$racun : Racun($stavke : listaStavki)
+       	$stavka : StavkaRacuna(kupovina30($racun.getKupac()) == true) from $stavke
+    then
+        modify ($stavka) {
+            getListaPopusta().add(new PopustNaStavku(null, null, 1, PopustNaStavku.VrstaPopusta.DODATNI));
+        }
+        System.out.println("Artikal iz kategorije kupovan u poslednjih 30: "+ $stavka.getArtikal().getNaziv());
+           
+end
+
 
 
 rule "Akcijski popusti"
